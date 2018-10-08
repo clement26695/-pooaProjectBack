@@ -1,5 +1,7 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
+import java.time.ZonedDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +24,11 @@ public class UserController {
 			, @RequestParam String email) {
 		
 		User n = new User();
-		n.setName(name);
+		n.setLastName(name);
+		n.setLogin(name);
+		n.setPassword("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
 		n.setEmail(email);
+		n.setDateCreation(ZonedDateTime.now());
 		userRepository.save(n);
 		return "Saved";
 	}
