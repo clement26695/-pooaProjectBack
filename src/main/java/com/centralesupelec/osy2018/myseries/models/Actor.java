@@ -3,18 +3,14 @@ package com.centralesupelec.osy2018.myseries.models;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Actor extends Person{
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "episode_actor", joinColumns = @JoinColumn(name = "episode_id", referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name = "actor_id",referencedColumnName = "id"))
-	private List<Episode> episodes;
+	@OneToMany(mappedBy = "actor")
+	private List<ActorEpisode> actorepisode;
 	
 	public Actor(String firstName, String lastName, LocalDate birthdate) {
 		super(firstName, lastName, birthdate);
