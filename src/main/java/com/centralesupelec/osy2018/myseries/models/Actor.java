@@ -14,7 +14,7 @@ public class Actor extends Person{
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "episode_actor", joinColumns = @JoinColumn(name = "episode_id", referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name = "actor_id",referencedColumnName = "id"))
-	private List<Episode> episode;
+	private List<Episode> episodes;
 	
 	public Actor(String firstName, String lastName, LocalDate birthdate) {
 		super(firstName, lastName, birthdate);
