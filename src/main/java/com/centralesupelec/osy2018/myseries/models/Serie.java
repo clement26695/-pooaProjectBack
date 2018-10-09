@@ -1,9 +1,13 @@
 package com.centralesupelec.osy2018.myseries.models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Serie {
@@ -14,6 +18,14 @@ public class Serie {
 	
 	private String name;
 	private String description;
+	
+	@OneToMany(mappedBy = "serie")
+	private List<Season> seasons;
+	
+	@ManyToMany(mappedBy = "series")
+	private List<Watchlist> watchlists;
+	
+	
 	
 	public Serie(String name, String description) {
 		this.name = name;
