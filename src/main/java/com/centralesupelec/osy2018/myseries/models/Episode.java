@@ -8,9 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Episode {
@@ -31,8 +30,8 @@ public class Episode {
 	@JoinColumn(name = "season_id")
 	private Season season;
 	
-	@ManyToMany(mappedBy = "episodes")
-	private List<Actor> actors;
+	@OneToMany(mappedBy = "episode")
+	private List<ActorEpisode> actorepisode;
 	
 	
   	public Episode(long id, String name, ZonedDateTime airDate, String description) {
