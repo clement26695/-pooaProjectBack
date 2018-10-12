@@ -47,7 +47,7 @@ jobs:
       # run tests!
       # - run: mvn integration-test
       
-      - run: mvn package
+      - run: mvn package -Dmaven.test.skip=true
   deploy:
     machine:
       enabled: true
