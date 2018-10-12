@@ -52,12 +52,10 @@ jobs:
     machine:
       enabled: true
     steps:
-      - run: ls -al
-      - run: ls -al target
-      # - run:
-      #     name: Deploy Over SSH
-      #     command: |
-      #       ssh $SSH_USER@$SSH_HOST "<remote deploy command>"
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh $SSH_USER@$SSH_HOST "git clone https://github.com/clement26695/pooaProjectBack.git"
 
 workflows:
   version: 2
