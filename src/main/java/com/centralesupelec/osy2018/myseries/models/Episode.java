@@ -23,13 +23,13 @@ public class Episode {
 	private String description;
 	
 	@ManyToOne
-  	@JoinColumn(name = "director_id")
-  	private Director director;
+	@JoinColumn(name = "director_id")
+	private Director director;
 	
 	@ManyToOne
 	@JoinColumn(name = "season_id")
 	private Season season;
-	
+
 	@OneToMany(mappedBy = "episode")
 	private List<ActorEpisode> actorepisode;
 
@@ -37,16 +37,8 @@ public class Episode {
 		
 	}
 	
-	
-  	public Episode(long id, String name, ZonedDateTime airDate, String description) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.airDate = airDate;
-		this.description = description;
+  public Episode() {
 	}
-  	
-  	
   	
 	public long getId() {
 		return id;
@@ -73,6 +65,20 @@ public class Episode {
 		this.description = description;
 	}
   
-  
+  public Director getDirector() {
+		return director;
+	}
+
+	public void setDirector(Director director) {
+		this.director = director;
+	}
+
+	public Season getSeason() {
+		return season;
+	}
+
+	public void setSeason(Season season) {
+		this.season = season;
+	}
 
 }

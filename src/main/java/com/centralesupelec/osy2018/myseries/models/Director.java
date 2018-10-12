@@ -21,4 +21,8 @@ public class Director extends Person{
 		// TODO Auto-generated constructor stub
 	}
 
+	public void addEpisode(Episode e) {
+		episode.add(e);
+	}
+
 }
