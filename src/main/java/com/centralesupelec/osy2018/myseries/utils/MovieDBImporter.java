@@ -1,5 +1,7 @@
 package com.centralesupelec.osy2018.myseries.utils;
 
+import java.io.IOException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +36,17 @@ public class MovieDBImporter {
 				
 				this.serieRepository.save(serie);
 			});
-
+			
 		} catch (UnirestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				Unirest.shutdown();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

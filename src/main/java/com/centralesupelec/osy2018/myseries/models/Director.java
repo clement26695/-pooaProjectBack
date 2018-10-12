@@ -13,8 +13,8 @@ public class Director extends Person{
 	private List<Episode> episode;
 	
 	
-	public Director(String firstName, String lastName, LocalDate birthdate) {
-		super(firstName, lastName, birthdate);
+	public Director(String firstName, String lastName, LocalDate birthdate, String image) {
+		super(firstName, lastName, birthdate, image);
 		// TODO Auto-generated constructor stub
 	}
 

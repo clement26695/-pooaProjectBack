@@ -26,14 +26,19 @@ public class Person {
 	@Size(max = 50)
 	@Column(name = "last_name", length = 50)
 	private String lastName;
+	
+	private String image;
 
 	private LocalDate birthdate;
 	
-	public Person(String firstName, String lastName, LocalDate birthdate) {
+	public Person() {}
+	
+	public Person(String firstName, String lastName, LocalDate birthdate, String image) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthdate = birthdate;
+		this.image = image;
 	}
 
 	public String getFirstName() {
@@ -58,6 +63,14 @@ public class Person {
 	
 	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 	
 	

@@ -18,6 +18,7 @@ public class Serie {
 	
 	private String name;
 	private String description;
+	private String image;
 	
 	@OneToMany(mappedBy = "serie")
 	private List<Season> seasons;
@@ -54,6 +55,14 @@ public class Serie {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 	
 	
