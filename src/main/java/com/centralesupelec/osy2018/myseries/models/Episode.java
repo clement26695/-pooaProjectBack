@@ -36,9 +36,6 @@ public class Episode {
 	public Episode(){
 		
 	}
-	
-  public Episode() {
-	}
   	
 	public long getId() {
 		return id;
