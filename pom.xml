@@ -72,6 +72,12 @@
 			<artifactId>unirest-java</artifactId>
 			<version>1.4.9</version>
 		</dependency>
+
+		<!-- FIX issue with JAVA 10 -->
+		<dependency>
+           <groupId>javax.xml.bind</groupId>
+           <artifactId>jaxb-api</artifactId>
+       </dependency>
 	</dependencies>
 
 	<build>
