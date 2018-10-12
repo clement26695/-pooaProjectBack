@@ -32,6 +32,10 @@ public class Episode {
 	
 	@OneToMany(mappedBy = "episode")
 	private List<ActorEpisode> actorepisode;
+
+	public Episode(){
+		
+	}
 	
 	
   	public Episode(long id, String name, ZonedDateTime airDate, String description) {

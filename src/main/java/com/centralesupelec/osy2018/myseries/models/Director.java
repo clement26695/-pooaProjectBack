@@ -12,6 +12,9 @@ public class Director extends Person{
 	@OneToMany(mappedBy = "director")
 	private List<Episode> episode;
 	
+	public Director(){
+
+	}
 	
 	public Director(String firstName, String lastName, LocalDate birthdate, String image) {
 		super(firstName, lastName, birthdate, image);

@@ -26,7 +26,9 @@ public class Serie {
 	@ManyToMany(mappedBy = "series")
 	private List<Watchlist> watchlists;
 	
-	
+	public Serie(){
+		
+	}
 	
 	public Serie(String name, String description) {
 		this.name = name;

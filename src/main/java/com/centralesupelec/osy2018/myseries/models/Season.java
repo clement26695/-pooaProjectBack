@@ -25,6 +25,9 @@ public class Season {
 	@JoinColumn(name = "serie_id")
 	private Serie serie;
 	
+	public Season() {
+
+	}
 	
 	public Season(long id, String name) {
 		super();
