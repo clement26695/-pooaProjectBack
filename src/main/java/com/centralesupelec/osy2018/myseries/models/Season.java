@@ -26,9 +26,8 @@ public class Season {
 	private Serie serie;
 	
 	
-	public Season(long id, String name) {
+	public Season(String name) {
 		super();
-		this.id = id;
 		this.name = name;
 	}
 	
@@ -44,6 +43,17 @@ public class Season {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public Serie getSerie() {
+		return serie;
+	}
+
+	public void setSerie(Serie serie) {
+		this.serie = serie;
+	}
+
+	public void addEpisode(Episode episode) {
+		this.episodes.add(episode);
+	}
 	
 }

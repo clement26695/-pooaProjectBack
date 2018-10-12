@@ -26,10 +26,7 @@ public class ActorEpisode {
 	private Episode episode;
 
 	
-	public ActorEpisode(long id, String characterName) {
-		this.id = id;
-		this.characterName = characterName;
-	}
+	public ActorEpisode() {}
 
 	public long getId() {
 		return id;
@@ -46,6 +43,24 @@ public class ActorEpisode {
 	public void setCharacterName(String characterName) {
 		this.characterName = characterName;
 	}
+
+	public Actor getActor() {
+		return actor;
+	}
+
+	public void setActor(Actor actor) {
+		this.actor = actor;
+	}
+
+	public Episode getEpisode() {
+		return episode;
+	}
+
+	public void setEpisode(Episode episode) {
+		this.episode = episode;
+	}
+	
+	
 	
 	
 }

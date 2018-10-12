@@ -20,7 +20,7 @@ public class SerieController {
 
 	@GetMapping(path="/series-refresh")
 	public @ResponseBody String refresh() {
-		this.movieDBImporter.showImporter();
+		this.movieDBImporter.showImporter(1);
 		return "Saved";
 	}
 
