@@ -52,9 +52,9 @@ jobs:
           path: target/*.jar
 
       - persist_to_workspace:
-        root: ~/repo
-        paths:
-          - target/*.jar
+          root: ~/repo
+          paths:
+            - target/*.jar
   deploy:
     <<: *defaults
     machine:
