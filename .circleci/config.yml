@@ -52,7 +52,8 @@ jobs:
       - run: ls -al ~/repo/target/
 
       - store_artifacts:
-          path: ~/repo/target/*.jar
+          path: ~/repo/target/myseries-0.0.1-SNAPSHOT.jar
+          destination: myseries-0.0.1-SNAPSHOT.jar
 
       - persist_to_workspace:
           root: ~/repo
