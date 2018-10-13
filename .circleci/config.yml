@@ -48,20 +48,23 @@ jobs:
       
       - run: mvn package -Dmaven.test.skip=true
 
+      - run: ls -al ~/repo/target/
+
       - store_artifacts:
-          path: target/*.jar
+          path: ~/repo/target/*.jar
 
       - persist_to_workspace:
           root: ~/repo
           paths:
             - target/*.jar
+  
   deploy:
     <<: *defaults
     machine:
       enabled: true
     steps:
       - attach_workspace:
-        at: ~/repo
+          at: ~/repo
       - run:
           name: Deploy Over SSH
           command: |
