@@ -12,30 +12,40 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.centralesupelec.osy2018.myseries.models.User;
+import com.centralesupelec.osy2018.myseries.models.Watchlist;
 import com.centralesupelec.osy2018.myseries.repository.UserRepository;
+import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
 
 @Controller
 @RequestMapping(path="/api")
 public class UserController {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private WatchlistRepository watchlistRepository;
 
 	@PostMapping(path="/users")
 	public @ResponseBody String addNewUser (@RequestParam String login, @RequestParam String lastName
 			, @RequestParam String firstName,@RequestParam String birthDate, @RequestParam String email, @RequestParam String password, @RequestParam String description) {
 		
-		User n = new User();
-		n.setLogin(login);
-		n.setLastName(lastName);
-		n.setFirstName(firstName);
+		User user = new User();
+		user.setLogin(login);
+		user.setLastName(lastName);
+		user.setFirstName(firstName);
 		LocalDate date;
 		date = LocalDate.parse(birthDate);
-		n.setBirthdate(date);
-		n.setPassword(password);
-		n.setEmail(email);
-		n.setDescription(description);
-		n.setDateCreation(ZonedDateTime.now());
-		userRepository.save(n);
+		user.setBirthdate(date);
+		user.setPassword(password);
+		user.setEmail(email);
+		user.setDescription(description);
+		user.setDateCreation(ZonedDateTime.now());
+		
+		userRepository.save(user);
+
+		Watchlist watchlist = new Watchlist();
+		watchlist.setUser(user);
+		watchlistRepository.save(watchlist);
+		
 		return "Saved";
 	}
 
