@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "actor")
 public class Actor extends Person{
 
 	@OneToMany(mappedBy = "actor")

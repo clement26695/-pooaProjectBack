@@ -2,19 +2,23 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
+
+defaults: &defaults
+  working_directory: ~/repo
+
 version: 2
 jobs:
   build:
+    <<: *defaults
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
 
-    working_directory: ~/repo
+      - image: circleci/mysql:5.7.20
+        environment:
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: myseries
 
     environment:
       # Customize the JVM maximum heap limit
@@ -36,7 +40,47 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-        
+
       # run tests!
       - run: mvn integration-test
 
+      - store_test_results:
+          path: target/surefire-reports
+      
+      - run: mvn package -Dmaven.test.skip=true
+
+      - run: ls -al ~/repo/target/
+
+      - store_artifacts:
+          path: ~/repo/target/myseries-0.0.1-SNAPSHOT.jar
+          destination: myseries-0.0.1-SNAPSHOT.jar
+
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - target/*.jar
+  
+  deploy:
+    <<: *defaults
+    machine:
+      enabled: true
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Deploy Over SSH
+          command: |
+            scp ~/repo/target/*.jar $SSH_USER@$SSH_HOST:~
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: circle-ci-integration
+          context: SSH-keys
