@@ -1,5 +1,6 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,19 @@ public class UserController {
 	private UserRepository userRepository;
 
 	@PostMapping(path="/users")
-	public @ResponseBody String addNewUser (@RequestParam String name
-			, @RequestParam String email) {
+	public @ResponseBody String addNewUser (@RequestParam String login, @RequestParam String lastName
+			, @RequestParam String firstName,@RequestParam String birthDate, @RequestParam String email, @RequestParam String password, @RequestParam String description) {
 		
 		User n = new User();
-		n.setLastName(name);
-		n.setLogin(name);
-		n.setPassword("testtesttesttesttesttesttesttesttesttesttesttesttesttesttest");
+		n.setLogin(login);
+		n.setLastName(lastName);
+		n.setFirstName(firstName);
+		LocalDate date;
+		date = LocalDate.parse(birthDate);
+		n.setBirthdate(date);
+		n.setPassword(password);
 		n.setEmail(email);
+		n.setDescription(description);
 		n.setDateCreation(ZonedDateTime.now());
 		userRepository.save(n);
 		return "Saved";

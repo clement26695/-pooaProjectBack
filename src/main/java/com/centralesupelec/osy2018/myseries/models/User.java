@@ -20,49 +20,49 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-	
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(length = 50, unique = true, nullable = false)
-    private String login;
-	
-    @JsonIgnore
-    @NotNull
-    @Size(min = 60, max = 60)
-    @Column(name = "password_hash", length = 60, nullable = false)
-    private String password;
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+
+	@NotNull
+	@Size(min = 1, max = 50)
+	@Column(length = 50, unique = true, nullable = false)
+	private String login;
+
+	@JsonIgnore
+	@NotNull
+	@Size(min = 60, max = 60)
+	@Column(name = "password_hash", length = 60, nullable = false)
+	private String password;
+
 	@Email
-    @Size(min = 5, max = 254)
-    @Column(length = 254, unique = true)
+	@Size(min = 5, max = 254)
+	@Column(length = 254, unique = true)
 	private String email;
-	
+
 	@Size(max = 50)
-    @Column(name = "last_name", length = 50)
+	@Column(name = "last_name", length = 50)
 	private String lastName;
-	
+
 	@Size(max = 50)
-    @Column(name = "first_name", length = 50)
+	@Column(name = "first_name", length = 50)
 	private String firstName;
-	
+
 	@CreatedDate
-    @Column(name = "created_date", nullable = false, updatable = false)
-    @JsonIgnore
+	@Column(name = "created_date", nullable = false, updatable = false)
+	@JsonIgnore
 	private ZonedDateTime dateCreation;
-	
+
 	private LocalDate birthdate;
 	private String description;
-	
+
 	@OneToOne
 	@JoinColumn(name = "watchlist_id")
 	private Watchlist watchlist;
-	
+
 	public User() {
 	}
-	
+
 	public User(long id, String login, String password, String email, String lastName, String firstName,
 			ZonedDateTime dateCreation, LocalDate birthdate, String description) {
 		super();
