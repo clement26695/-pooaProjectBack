@@ -82,5 +82,5 @@ workflows:
             - build
           filters:
             branches:
-              only: circle-ci-integration
+              only: master
           context: SSH-keys
