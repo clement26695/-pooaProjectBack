@@ -1,6 +1,6 @@
 package com.centralesupelec.osy2018.myseries.models;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,10 +23,10 @@ public class Serie {
 	private String image;
 	
 	@OneToMany(mappedBy = "serie")
-	private List<Season> seasons;
+	private Set<Season> seasons;
 	
 	@ManyToMany(mappedBy = "series")
-	private List<Watchlist> watchlists;
+	private Set<Watchlist> watchlists;
 	
 	public Serie(){
 		

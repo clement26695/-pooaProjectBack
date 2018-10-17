@@ -1,6 +1,6 @@
 package com.centralesupelec.osy2018.myseries.models;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -26,7 +26,7 @@ public class Watchlist {
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "serie_watchlist", joinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "watchlist_id", referencedColumnName = "id"))
-	private List<Serie> series;
+	private Set<Serie> series;
 
 	public Long getId() {
 		return id;
@@ -44,15 +44,11 @@ public class Watchlist {
 		this.user = user;
 	}
 
-	public void addSerie(Serie serie) {
-		this.series.add(serie);
-	}
-
-	public List<Serie> getSeries() {
+	public Set<Serie> getSeries() {
 		return series;
 	}
 
-	public void setSeries(List<Serie> series) {
+	public void setSeries(Set<Serie> series) {
 		this.series = series;
 	}
 	

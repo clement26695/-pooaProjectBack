@@ -1,7 +1,7 @@
 package com.centralesupelec.osy2018.myseries.models;
 
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +33,7 @@ public class Episode {
 	private Season season;
 
 	@OneToMany(mappedBy = "episode")
-	private List<ActorEpisode> actorepisode;
+	private Set<ActorEpisode> actorepisode;
 
 	public Episode(){
 		

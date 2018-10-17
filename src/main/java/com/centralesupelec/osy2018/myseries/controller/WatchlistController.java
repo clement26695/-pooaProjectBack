@@ -1,7 +1,7 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.models.Watchlist;
@@ -26,7 +26,7 @@ public class WatchlistController {
   private SerieRepository serieRepository;
 
   @GetMapping(path = "/series/userId/{userId}")
-  public @ResponseBody List<Serie> watchlistSeries(@PathVariable("userId") long userId) {
+  public @ResponseBody Set<Serie> watchlistSeries(@PathVariable("userId") long userId) {
     Optional<Watchlist> watchlist = watchlistRepository.findOneByUserId(userId);
 
     if (watchlist.isPresent()) {
@@ -45,7 +45,7 @@ public class WatchlistController {
       Watchlist watchlist = watchlistResponse.get();
       Serie serie = serieResponse.get();
 
-      watchlist.addSerie(serie);
+      watchlist.getSeries().add(serie);
 
       watchlistRepository.save(watchlist);
 

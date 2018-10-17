@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet author="clementdessoude" id="1539701258192-3">
-        <addColumn tableName="watchlist">
-            <column name="user_id" type="bigint"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="clementdessoude" id="1539701258192-3">
-        <dropColumn tableName="user">
-            <column name="watchlist_id"/>
-        </addColumn>
-    </changeSet>
-    <changeSet author="clementdessoude" id="1539701258192-4">
-        <modifyDataType columnName="description" newDataType="VARCHAR(2000)" tableName="serie"/>
-    </changeSet>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+	<changeSet author="clementdessoude" id="1539701258192-1">
+		<addColumn tableName="watchlist">
+			<column name="user_id" type="bigint" />
+		</addColumn>
+	</changeSet>
+	<changeSet author="clementdessoude" id="1539701258192-2">
+		<dropColumn tableName="user">
+			<column name="watchlist_id" />
+		</dropColumn>
+	</changeSet>
+	<changeSet author="clementdessoude" id="1539701258192-3">
+		<modifyDataType columnName="description"
+			newDataType="VARCHAR(2000)" tableName="serie" />
+	</changeSet>
+	<changeSet author="clementdessoude" id="1539701258192-4">
+		<addUniqueConstraint
+			columnNames="last_name, first_name"
+			constraintName="unique_lastName_firstName" tableName="person" />
+	</changeSet>
+	<changeSet author="clementdessoude" id="1539701258192-5">
+		<addUniqueConstraint
+			columnNames="serie_id, watchlist_id"
+			constraintName="unique_serie_watchlist" tableName="serie_watchlist" />
+	</changeSet>
 </databaseChangeLog>

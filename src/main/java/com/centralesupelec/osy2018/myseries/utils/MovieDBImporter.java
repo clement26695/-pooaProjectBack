@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.centralesupelec.osy2018.myseries.models.Actor;
@@ -32,10 +33,10 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 @Service
 public class MovieDBImporter {
 	private final static String baseURL = "https://api.themoviedb.org/3/tv";
-	
+
 	@Autowired
 	private SerieRepository serieRepository;
-	
+
 	@Autowired
 	private SeasonRepository seasonRepository;
 
@@ -44,142 +45,144 @@ public class MovieDBImporter {
 
 	@Autowired
 	private DirectorRepository directorRepository;
-	
+
 	@Autowired
 	private ActorRepository actorRepository;
 
 	@Autowired
 	private ActorEpisodeRepository actorEpisodeRepository;
-	
+
 	public void showImporter(int pageLimit) {
 		int page = 1;
-		
-		ArrayList<Serie> series = new ArrayList<>();
-		ArrayList<Integer> seriesId = new ArrayList<>();
-		
+
 		while (page <= pageLimit) {
 			String url = baseURL + "/popular";
-			
-			try {	
-				HttpResponse<JsonNode> jsonResponse = Unirest.get(url)
-						  .header("accept", "application/json")
-						  .queryString("language","en-US")
-						  .queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")
-						  .queryString("page", page)
-						  .asJson();
+
+			try {
+				HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
+						.queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")
+						.queryString("page", page).asJson();
 				JSONObject jsonObject = jsonResponse.getBody().getObject();
-				
+
 				JSONArray shows = jsonObject.getJSONArray("results");
 				shows.forEach(s -> {
 					JSONObject show = (JSONObject) s;
-					
-					String description = show.getString("overview");
-					
-					if (description.length() > 255) {
-						description = description.substring(0,255);
+
+					Serie serie = new Serie();
+
+					String key = "overview";
+					if (!show.isNull(key)) {
+						String description = show.getString(key);
+						if (description.length() > 2000) {
+							description = description.substring(0, 2000);
+						}
+
+						serie.setDescription(description);
 					}
-					
-					Serie serie = new Serie(show.getString("original_name"), description);
-					try {
-						serie.setImage(show.getString("poster_path"));
-					} catch (JSONException e) {
-						
+
+					key = "original_name";
+					if (!show.isNull(key)) {
+						serie.setName(show.getString(key));
 					}
-					
+
+					key = "poster_path";
+					if (!show.isNull(key)) {
+						serie.setImage(show.getString(key));
+					}
+
 					this.serieRepository.save(serie);
 
 					this.showInfoImporter(show.getInt("id"), serie);
 				});
-				
+
 			} catch (UnirestException e) {
 				e.printStackTrace();
 			} finally {
 				page += 1;
 			}
 		}
-		
-		for (int i = 0; i < series.size(); i++) {
-			this.showInfoImporter(seriesId.get(i), series.get(i));
-		}
-
 	}
 
 	public void showInfoImporter(int tmdbShowId, Serie serie) {
 		String url = baseURL + "/" + tmdbShowId;
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.get(url)
-				.header("accept", "application/json")
-				.queryString("language", "en-US")
-				.queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")
-				.asJson();
+			HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
+					.queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();
 			JSONObject jsonObject = jsonResponse.getBody().getObject();
 
-			JSONArray seasons = jsonObject.getJSONArray("seasons");
-			seasons.forEach(s -> {
-				JSONObject seasonTMDB = (JSONObject) s;
-				Season season = new Season(seasonTMDB.getString("name"));
-				season.setSerie(serie);
-				this.seasonRepository.save(season);
+			String keySeasons = "seasons";
+			if (!jsonObject.isNull(keySeasons)) {
+				JSONArray seasons = jsonObject.getJSONArray("seasons");
+				seasons.forEach(s -> {
+					JSONObject seasonTMDB = (JSONObject) s;
+					Season season = new Season();
 
-				this.seasonInfoImporter(tmdbShowId, season, seasonTMDB.getInt("season_number"));
-			});
+					String key = "name";
+					if (!seasonTMDB.isNull(key)) {
+						season.setName(seasonTMDB.getString(key));
+					}
+
+					season.setSerie(serie);
+					this.seasonRepository.save(season);
+
+					this.seasonInfoImporter(tmdbShowId, season, seasonTMDB.getInt("season_number"));
+				});
+			}
 
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
-		} finally {
-
 		}
 	}
-	
+
 	public void seasonInfoImporter(int tmdbShowId, Season season, int seasonNumber) {
 		String url = baseURL + "/" + tmdbShowId + "/season/" + seasonNumber;
 		try {
-			HttpResponse<JsonNode> jsonResponse = Unirest.get(url)
-					  .header("accept", "application/json")
-					  .queryString("language","en-US")
-					  .queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")
-					  .asJson();
+			HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
+					.queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();
 			JSONObject jsonObject = jsonResponse.getBody().getObject();
-			
-			JSONArray episodesResults = jsonObject.getJSONArray("episodes");
-		
-			episodesResults.forEach(e -> {
-				JSONObject episodeTMDB = (JSONObject) e;				
-				Episode episode = new Episode();
-				
-				String key = "name";
-				if (!episodeTMDB.isNull(key)) {
-					episode.setName(episodeTMDB.getString(key));
-				}
 
-				key = "air_date";
-				if (!episodeTMDB.isNull(key)) {
-					LocalDate date = LocalDate.parse(episodeTMDB.getString(key));
-					LocalTime midnight = LocalTime.of(0, 0);
-					ZonedDateTime datetime = ZonedDateTime.of(date, midnight, ZoneId.systemDefault());
+			String keyEpisodes = "episodes";
+			if (!jsonObject.isNull(keyEpisodes)) {
+				JSONArray episodesResults = jsonObject.getJSONArray("episodes");
 
-					episode.setAirDate(datetime);
-				}
+				episodesResults.forEach(e -> {
+					JSONObject episodeTMDB = (JSONObject) e;
+					Episode episode = new Episode();
 
-				key = "overview";
-				if (!episodeTMDB.isNull(key)) {
-					String description = episodeTMDB.getString(key);
-
-					if (description.length() > 255) {
-						description = description.substring(0, 255);
+					String key = "name";
+					if (!episodeTMDB.isNull(key)) {
+						episode.setName(episodeTMDB.getString(key));
 					}
 
-					episode.setDescription(description);
-				}
-				
-				episode.setSeason(season);
+					key = "air_date";
+					if (!episodeTMDB.isNull(key)) {
+						LocalDate date = LocalDate.parse(episodeTMDB.getString(key));
+						LocalTime midnight = LocalTime.of(0, 0);
+						ZonedDateTime datetime = ZonedDateTime.of(date, midnight, ZoneId.systemDefault());
 
-				this.episodeRepository.save(episode);
+						episode.setAirDate(datetime);
+					}
 
-				this.episodeCreditsImporter(tmdbShowId, episode, seasonNumber, episodeTMDB.getInt("episode_number"));
-			});
+					key = "overview";
+					if (!episodeTMDB.isNull(key)) {
+						String description = episodeTMDB.getString(key);
+
+						if (description.length() > 255) {
+							description = description.substring(0, 255);
+						}
+
+						episode.setDescription(description);
+					}
+
+					episode.setSeason(season);
+
+					this.episodeRepository.save(episode);
+
+					this.episodeCreditsImporter(tmdbShowId, episode, seasonNumber, episodeTMDB.getInt("episode_number"));
+				});
+			}
 
 		} catch (UnirestException e) {
 			e.printStackTrace();
@@ -197,98 +200,128 @@ public class MovieDBImporter {
 					.queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();
 			JSONObject jsonObject = jsonResponse.getBody().getObject();
 
-			JSONArray castResults = jsonObject.getJSONArray("cast");
+			String keyCast = "cast";
+			if (!jsonObject.isNull(keyCast)) {
+				JSONArray castResults = jsonObject.getJSONArray("cast");
 
-			castResults.forEach(c -> {
-				JSONObject castTMDB = (JSONObject) c;
-				Actor actor = new Actor();
+				castResults.forEach(c -> {
+					JSONObject castTMDB = (JSONObject) c;
+					Actor actor = new Actor();
 
-				String key = "name";
-				if (!castTMDB.isNull(key)) {
-					String name = castTMDB.getString(key);
-					int index = name.lastIndexOf(" ");
-					String firstName = "", lastName = "";
+					String key = "name";
+					if (!castTMDB.isNull(key)) {
+						String name = castTMDB.getString(key);
+						int index = name.lastIndexOf(" ");
+						String firstName = "", lastName = "";
 
-					if (index != -1) {
-						firstName = name.substring(0, index);
-						lastName = name.substring(index + 1);
-					} else {
-						lastName = name;
+						if (index != -1) {
+							firstName = name.substring(0, index);
+							lastName = name.substring(index + 1);
+						} else {
+							lastName = name;
+						}
+
+						actor.setFirstName(firstName);
+						actor.setLastName(lastName);
 					}
-					
-					actor.setFirstName(firstName);
-					actor.setLastName(lastName);
-				}
 
+					key = "profile_path";
+					if (!castTMDB.isNull(key)) {
+						String imagePath = castTMDB.getString(key);
 
-				key = "profile_path";
-				if (!castTMDB.isNull(key)) {
-					String imagePath = castTMDB.getString(key);
+						actor.setImage(imagePath);
+					}
 
-					actor.setImage(imagePath);
-				}
+					try {
+						this.actorRepository.save(actor);
 
-				this.actorRepository.save(actor);
+						ActorEpisode actorEpisode = new ActorEpisode();
+						actorEpisode.setActor(actor);
+						actorEpisode.setEpisode(episode);
+						key = "character";
+						if (!castTMDB.isNull(key)) {
+							String characterName = castTMDB.getString(key);
 
-				ActorEpisode actorEpisode = new ActorEpisode();
-				actorEpisode.setActor(actor);
-				actorEpisode.setEpisode(episode);
-				key = "character";
-				if (!castTMDB.isNull(key)) {
-					String characterName = castTMDB.getString(key);
+							actorEpisode.setCharacterName(characterName);
+						}
 
-					actorEpisode.setCharacterName(characterName);
-				}
+						this.actorEpisodeRepository.save(actorEpisode);
 
-				this.actorEpisodeRepository.save(actorEpisode);
-			});
+					} catch (DataIntegrityViolationException e) {
+						Throwable t = e.getCause();
+						while ((t != null) && !(t instanceof ConstraintViolationException)) {
+							t = t.getCause();
+						}
+						if (t instanceof ConstraintViolationException) {
+							System.out.println("Person with firstname " + actor.getFirstName() + " and lastname "
+									+ actor.getLastName() + " is already in the database");
 
-			JSONArray crewResults = jsonObject.getJSONArray("crew");
-			
-			crewResults.forEach(c -> {
-				JSONObject crewTMDB = (JSONObject) c;
+						}
+					}
 
-				String key = "job";
-				if (!crewTMDB.isNull(key)) {
-					
-					if (crewTMDB.getString(key) == "Director") {
-						Director director = new Director();
+				});
+			}
 
-						key = "name";
-						if (!crewTMDB.isNull(key)) {
-							String name = crewTMDB.getString(key);
-							int index = name.lastIndexOf(" ");
-							String firstName = "", lastName = "";
+			String keyCrew = "cast";
+			if (!jsonObject.isNull(keyCrew)) {
 
-							if (index != -1) {
-								firstName = name.substring(0, index);
-								lastName = name.substring(index + 1);
-							} else {
-								lastName = name;
+				JSONArray crewResults = jsonObject.getJSONArray("crew");
+
+				crewResults.forEach(c -> {
+					JSONObject crewTMDB = (JSONObject) c;
+
+					String key = "job";
+					if (!crewTMDB.isNull(key)) {
+
+						if (crewTMDB.getString(key) == "Director") {
+							Director director = new Director();
+
+							key = "name";
+							if (!crewTMDB.isNull(key)) {
+								String name = crewTMDB.getString(key);
+								int index = name.lastIndexOf(" ");
+								String firstName = "", lastName = "";
+
+								if (index != -1) {
+									firstName = name.substring(0, index);
+									lastName = name.substring(index + 1);
+								} else {
+									lastName = name;
+								}
+
+								director.setFirstName(firstName);
+								director.setFirstName(lastName);
 							}
 
-							director.setFirstName(firstName);
-							director.setFirstName(lastName);
+							key = "profile_path";
+							if (!crewTMDB.isNull(key)) {
+								String imagePath = crewTMDB.getString(key);
+								director.setImage(imagePath);
+							}
+
+							director.addEpisode(episode);
+
+							try {
+								this.directorRepository.save(director);
+							} catch (DataIntegrityViolationException e) {
+								Throwable t = e.getCause();
+								while ((t != null) && !(t instanceof ConstraintViolationException)) {
+									t = t.getCause();
+								}
+								if (t instanceof ConstraintViolationException) {
+									System.out.println("Person with firstname " + director.getFirstName() + " and lastname "
+											+ director.getLastName() + " is already in the database");
+
+								}
+							}
 						}
-
-						key = "profile_path";
-						if (!crewTMDB.isNull(key)) {
-							String imagePath = crewTMDB.getString(key);
-							director.setImage(imagePath);
-						}
-
-						director.addEpisode(episode);
-
-						this.directorRepository.save(director);
 					}
-				}
-			});
+				});
+			}
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
-		} finally {
-
 		}
 	}
 

@@ -58,10 +58,6 @@ public class User {
 	private LocalDate birthdate;
 	private String description;
 
-	@OneToOne
-	@JoinColumn(name = "watchlist_id")
-	private Watchlist watchlist;
-
 	public User() {
 	}
 

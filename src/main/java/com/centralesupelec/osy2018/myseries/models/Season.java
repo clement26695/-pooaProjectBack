@@ -1,6 +1,6 @@
 package com.centralesupelec.osy2018.myseries.models;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +21,7 @@ public class Season {
 	private String name;
 	
 	@OneToMany(mappedBy = "season")
-	private List<Episode> episodes;
+	private Set<Episode> episodes;
 	
 	@ManyToOne
 	@JoinColumn(name = "serie_id")
