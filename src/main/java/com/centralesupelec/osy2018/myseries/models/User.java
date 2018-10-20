@@ -2,6 +2,7 @@ package com.centralesupelec.osy2018.myseries.models;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,16 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.data.annotation.CreatedDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "user")
@@ -63,6 +65,13 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private Set<Notification> notifications;
 	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(name = "user_authority", joinColumns = {
+			@JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "authority_name", referencedColumnName = "name") })
+	private Set<Authority> authorities = new HashSet<>();
+
 	public User() {
 	}
 
@@ -150,5 +159,13 @@ public class User {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Set<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
 	}
 }

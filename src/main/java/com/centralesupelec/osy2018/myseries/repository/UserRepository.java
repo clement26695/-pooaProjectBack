@@ -12,5 +12,8 @@ import org.springframework.data.repository.CrudRepository;
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	Optional<User> findByLoginAndPassword(String login, String password);
+	Optional<User> findOneWithAuthoritiesByEmail(String login);
+
+	Optional<User> findOneWithAuthoritiesByLogin(String lowercaseLogin);
 
 }

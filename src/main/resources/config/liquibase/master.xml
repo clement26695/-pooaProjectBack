@@ -13,5 +13,7 @@
 	<include
 		file="config/liquibase/changelog/2018-10-16T14:47:28Z_changelog.xml"
 		relativeToChangelogFile="false" />
+	<include file="config/liquibase/changelog/2018-10-20T16:37:30Z_add_authorities.xml" relativeToChangelogFile="false" />
+
 
 </databaseChangeLog>

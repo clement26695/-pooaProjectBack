@@ -1,10 +1,14 @@
 package com.centralesupelec.osy2018.myseries.security.jwt;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
+
+import com.centralesupelec.osy2018.myseries.config.Constants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +18,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import io.github.jhipster.config.JHipsterProperties;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -32,26 +39,14 @@ public class TokenProvider {
 
     private long tokenValidityInMilliseconds;
 
-    private long tokenValidityInMillisecondsForRememberMe;
-
     @PostConstruct
     public void init() {
         byte[] keyBytes;
-        String secret = jHipsterProperties.getSecurity().getAuthentication().getJwt().getSecret();
-        if (!StringUtils.isEmpty(secret)) {
-            log.warn("Warning: the JWT key used is not Base64-encoded. " +
-                "We recommend using the `jhipster.security.authentication.jwt.base64-secret` key for optimum security.");
-            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-        } else {
-            log.debug("Using a Base64-encoded JWT secret key");
-            keyBytes = Decoders.BASE64.decode(jHipsterProperties.getSecurity().getAuthentication().getJwt().getBase64Secret());
-        }
+        String secret = Constants.JWT_SECRET_KEY;
+        log.debug("Using a Base64-encoded JWT secret key");
+        keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.tokenValidityInMilliseconds =
-            1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSeconds();
-        this.tokenValidityInMillisecondsForRememberMe =
-            1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt()
-                .getTokenValidityInSecondsForRememberMe();
+        this.tokenValidityInMilliseconds = 1000 * Constants.TokenValidityInSeconds;
     }
 
     public String createToken(Authentication authentication, boolean rememberMe) {
@@ -60,12 +55,7 @@ public class TokenProvider {
             .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date validity;
-        if (rememberMe) {
-            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
-        } else {
-            validity = new Date(now + this.tokenValidityInMilliseconds);
-        }
+        Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
             .setSubject(authentication.getName())

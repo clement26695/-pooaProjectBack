@@ -1,20 +1,25 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
+import com.centralesupelec.osy2018.myseries.models.Authority;
 import com.centralesupelec.osy2018.myseries.models.User;
 import com.centralesupelec.osy2018.myseries.models.Watchlist;
 import com.centralesupelec.osy2018.myseries.models.dto.ManagedUserVM;
-import com.centralesupelec.osy2018.myseries.models.dto.UserDTO;
+import com.centralesupelec.osy2018.myseries.repository.AuthorityRepository;
 import com.centralesupelec.osy2018.myseries.repository.UserRepository;
 import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
+import com.centralesupelec.osy2018.myseries.security.AuthoritiesConstants;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,11 +31,21 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 @RequestMapping(path="/api")
 public class UserController {
-	@Autowired
+
 	private UserRepository userRepository;
-	@Autowired
+
 	private WatchlistRepository watchlistRepository;
 
+	private AuthorityRepository authorityRepository;
+
+	private final PasswordEncoder passwordEncoder;
+
+	public UserController(PasswordEncoder passwordEncoder, UserRepository userRepository, WatchlistRepository watchlistRepository, AuthorityRepository authorityRepository) {
+		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
+		this.watchlistRepository = watchlistRepository;
+		this.authorityRepository = authorityRepository;
+	}
 	@PostMapping(path="/register")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addNewUser (@Valid @RequestBody ManagedUserVM managedUserVM) {
@@ -39,10 +54,14 @@ public class UserController {
 		newUser.setLastName(managedUserVM.getLastName());
 		newUser.setFirstName(managedUserVM.getFirstName());
 		newUser.setBirthdate(managedUserVM.getBirthdate());
-		newUser.setPassword(managedUserVM.getPassword());
+		newUser.setPassword(passwordEncoder.encode(managedUserVM.getPassword()));
 		newUser.setEmail(managedUserVM.getEmail());
 		newUser.setDescription(managedUserVM.getDescription());
 		newUser.setDateCreation(ZonedDateTime.now());
+
+		Set<Authority> authorities = new HashSet<>();
+		authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+		newUser.setAuthorities(authorities);
 		
 		userRepository.save(newUser);
 
@@ -52,6 +71,7 @@ public class UserController {
 	}
 
 	@GetMapping(path="/users")
+	@PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
 	public @ResponseBody Iterable<User> getAllUsers() {
 		return userRepository.findAll();
 	}

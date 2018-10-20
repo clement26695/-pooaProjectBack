@@ -37,12 +37,15 @@ public class UserJWTController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
-
+        System.out.println("1");
         UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
-
+            new UsernamePasswordAuthenticationToken(loginVM.getLogin(), loginVM.getPassword());
+        System.out.println("2");
+        System.out.println(authenticationToken);
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
+        System.out.println("3");
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        System.out.println("4");
         boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
         String jwt = tokenProvider.createToken(authentication, rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();

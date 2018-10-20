@@ -10,7 +10,7 @@ public class LoginVM {
 
     @NotNull
     @Size(min = 1, max = 50)
-    private String username;
+    private String login;
 
     @NotNull
     @Size(min = ManagedUserVM.PASSWORD_MIN_LENGTH, max = ManagedUserVM.PASSWORD_MAX_LENGTH)
@@ -18,12 +18,12 @@ public class LoginVM {
 
     private Boolean rememberMe;
 
-    public String getUsername() {
-        return username;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {
@@ -45,7 +45,7 @@ public class LoginVM {
     @Override
     public String toString() {
         return "LoginVM{" +
-            "username='" + username + '\'' +
+            "login='" + login + '\'' +
             ", rememberMe=" + rememberMe +
             '}';
     }
