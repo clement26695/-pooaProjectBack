@@ -3,6 +3,7 @@ package com.centralesupelec.osy2018.myseries.models;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,12 @@ public class Episode {
 	private String name;
 	private ZonedDateTime airDate;
 	private String description;
+	
+	@Column(name = "image_url")
+	private String imageURL;
+	
+	@Column(name = "episode_number")
+	private int episodeNumber;
 	
 	@ManyToOne
 	@JoinColumn(name = "director_id")
@@ -79,5 +86,21 @@ public class Episode {
 	public void setSeason(Season season) {
 		this.season = season;
 	}
+	
+	public String getImageURL() {
+		return imageURL;
+	}
 
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+
+	public int getEpisodeNumber() {
+		return episodeNumber;
+	}
+
+	public void setEpisodeNumber(int episodeNumber) {
+		this.episodeNumber = episodeNumber;
+	}
+	
 }

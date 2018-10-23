@@ -2,6 +2,7 @@ package com.centralesupelec.osy2018.myseries.models;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +20,12 @@ public class Season {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String name;
+	
+	@Column(name = "image_url")
+	private String imageURL;
+	
+	@Column(name = "season_number")
+	private int seasonNumber;
 	
 	@OneToMany(mappedBy = "season")
 	private Set<Episode> episodes;
@@ -60,5 +67,22 @@ public class Season {
 	public void addEpisode(Episode episode) {
 		this.episodes.add(episode);
 	}
+
+	public int getSeasonNumber() {
+		return seasonNumber;
+	}
+
+	public void setSeasonNumber(int seasonNumber) {
+		this.seasonNumber = seasonNumber;
+	}
+	
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
+	
 	
 }

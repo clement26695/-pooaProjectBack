@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.json.JSONArray;
@@ -17,12 +18,14 @@ import com.centralesupelec.osy2018.myseries.models.Actor;
 import com.centralesupelec.osy2018.myseries.models.ActorEpisode;
 import com.centralesupelec.osy2018.myseries.models.Director;
 import com.centralesupelec.osy2018.myseries.models.Episode;
+import com.centralesupelec.osy2018.myseries.models.Genre;
 import com.centralesupelec.osy2018.myseries.models.Season;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.ActorEpisodeRepository;
 import com.centralesupelec.osy2018.myseries.repository.ActorRepository;
 import com.centralesupelec.osy2018.myseries.repository.DirectorRepository;
 import com.centralesupelec.osy2018.myseries.repository.EpisodeRepository;
+import com.centralesupelec.osy2018.myseries.repository.GenreRepository;
 import com.centralesupelec.osy2018.myseries.repository.SeasonRepository;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
 import com.mashape.unirest.http.HttpResponse;
@@ -51,6 +54,9 @@ public class MovieDBImporter {
 
 	@Autowired
 	private ActorEpisodeRepository actorEpisodeRepository;
+	
+	@Autowired
+	private GenreRepository genreRepository;
 
 	public void showImporter(int pageLimit) {
 		int page = 1;
@@ -110,9 +116,40 @@ public class MovieDBImporter {
 					.queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();
 			JSONObject jsonObject = jsonResponse.getBody().getObject();
 
+			String keyGenre = "genre";
+			if (!jsonObject.isNull(keyGenre)) {
+				JSONArray genres = jsonObject.getJSONArray(keyGenre);
+				genres.forEach(s -> {
+					JSONObject genreTMDB = (JSONObject) s;
+					Genre genre = new Genre();
+					
+					String key = "id";
+					if (!genreTMDB.isNull(key)) {
+						Long id = genreTMDB.getLong(key);
+						
+						Optional<Genre> genreOptional = genreRepository.findById(id);
+						if (genreOptional.isPresent()) {
+							genre = genreOptional.get();
+						} else {
+							genre.setId(id);
+							
+							key = "name";
+							if (!genreTMDB.isNull(key)) {
+								genre.setName(genreTMDB.getString(key));
+							}
+						}
+					}
+					
+					genre.getSeries().add(serie);
+					
+					this.genreRepository.save(genre);
+					
+				});
+			}
+			
 			String keySeasons = "seasons";
 			if (!jsonObject.isNull(keySeasons)) {
-				JSONArray seasons = jsonObject.getJSONArray("seasons");
+				JSONArray seasons = jsonObject.getJSONArray(keySeasons);
 				seasons.forEach(s -> {
 					JSONObject seasonTMDB = (JSONObject) s;
 					Season season = new Season();
@@ -121,6 +158,20 @@ public class MovieDBImporter {
 					if (!seasonTMDB.isNull(key)) {
 						season.setName(seasonTMDB.getString(key));
 					}
+					
+					key = "season_number";
+					if (!seasonTMDB.isNull(key)) {
+						int seasonNumber = seasonTMDB.getInt(key);
+						season.setSeasonNumber(seasonNumber);
+					}
+					
+					key = "poster_path";
+					if (!seasonTMDB.isNull(key)) {
+						String imageURL = seasonTMDB.getString(key);
+						season.setImageURL(imageURL);
+					}
+					
+					
 
 					season.setSerie(serie);
 					this.seasonRepository.save(season);
@@ -174,6 +225,20 @@ public class MovieDBImporter {
 						}
 
 						episode.setDescription(description);
+					}
+					
+					key = "still_path";
+					if (!episodeTMDB.isNull(key)) {
+						String imageURL = episodeTMDB.getString(key);
+						
+						episode.setImageURL(imageURL);
+					}
+					
+					key = "episode_number";
+					if (!episodeTMDB.isNull(key)) {
+						int episodeNumber = episodeTMDB.getInt(key);
+						
+						episode.setEpisodeNumber(episodeNumber);
 					}
 
 					episode.setSeason(season);
