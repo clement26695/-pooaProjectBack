@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+	<changeSet author="clementdessoude" id="1539701258192-1">
+		<addColumn tableName="episode">
+			<column name="image_url" type="varchar(255)" />
+		</addColumn>
+		<addColumn tableName="episode">
+			<column name="episode_number" type="tinyint" />
+		</addColumn>
+		<addColumn tableName="season">
+			<column name="season_number" type="tinyint" />
+		</addColumn>
+		<addColumn tableName="season">
+			<column name="image_url" type="varchar(255)" />
+		</addColumn>
+		
+		<createTable tableName="genre">
+	      <column name="id" type="BIGINT">
+	        <constraints primaryKey="true"/>
+	      </column>
+	      <column name="name" type="varchar(255)"/>
+	    </createTable>
+	    <createTable tableName="serie_genre">
+	      <column name="serie_id" type="BIGINT">
+	        <constraints nullable="false"/>
+	      </column>
+	      <column name="genre_id" type="BIGINT">
+	        <constraints nullable="false"/>
+	      </column>
+	    </createTable>
+	    
+	    <createIndex indexName="serie_genre_genre" tableName="serie_genre">
+	      <column name="genre_id"/>
+	    </createIndex>
+	    <createIndex indexName="serie_genre_serie" tableName="serie_genre">
+	      <column name="serie_id"/>
+	    </createIndex>
+	</changeSet>
+	
+	
+</databaseChangeLog>
