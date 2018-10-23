@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Table(name = "person", uniqueConstraints = @UniqueConstraint(columnNames = { "first_name", "last_name" }))
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Person {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -29,13 +29,13 @@ public class Person {
 	@Size(max = 50)
 	@Column(name = "last_name", length = 50)
 	private String lastName;
-	
+
 	private String image;
 
 	private LocalDate birthdate;
-	
+
 	public Person() {}
-	
+
 	public Person(String firstName, String lastName, LocalDate birthdate, String image) {
 		super();
 		this.firstName = firstName;
@@ -44,26 +44,34 @@ public class Person {
 		this.image = image;
 	}
 
+    public Long getId(){
+        return id;
+    }
+
+    public void setId(Long id){
+        this.id = id;
+    }
+
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	
+
 	public String getLastName() {
 		return lastName;
 	}
-	
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 	public LocalDate getBirthdate() {
 		return birthdate;
 	}
-	
+
 	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
@@ -75,6 +83,14 @@ public class Person {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	
-	
+
+    @Override
+    public String toString(){
+        return "{" +
+            "firstname:" + this.firstName +
+            ",lastname:" + this.lastName +
+            ",birthdate:" + this.birthdate +
+        "}";
+    }
+
 }

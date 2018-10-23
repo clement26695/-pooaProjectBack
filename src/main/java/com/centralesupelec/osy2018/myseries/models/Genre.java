@@ -1,5 +1,6 @@
 package com.centralesupelec.osy2018.myseries.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -10,20 +11,20 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "genre")
 public class Genre {
-	
+
 	@Id
 	private Long id;
-	
+
 	private String name;
 
 	@ManyToMany(mappedBy = "genres")
-	private Set<Serie> series;
-	
+	private Set<Serie> series = new HashSet<>();
+
 	public Genre() {
-		super();
+        super();
 	}
-	
-	
+
+
 	public Long getId() {
 		return id;
 	}
@@ -49,7 +50,7 @@ public class Genre {
 	public void setSeries(Set<Serie> series) {
 		this.series = series;
 	}
-	
-	
-	
+
+
+
 }
