@@ -262,7 +262,7 @@ public class MovieDBImporter {
 				});
 			}
 
-			String keyCrew = "cast";
+			String keyCrew = "crew";
 			if (!jsonObject.isNull(keyCrew)) {
 
 				JSONArray crewResults = jsonObject.getJSONArray("crew");
@@ -273,7 +273,7 @@ public class MovieDBImporter {
 					String key = "job";
 					if (!crewTMDB.isNull(key)) {
 
-						if (crewTMDB.getString(key) == "Director") {
+						if (crewTMDB.getString(key).equals("Director")) {
 							Director director = new Director();
 
 							key = "name";
