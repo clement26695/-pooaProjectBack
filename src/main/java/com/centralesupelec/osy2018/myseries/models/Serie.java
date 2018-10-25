@@ -1,5 +1,6 @@
 package com.centralesupelec.osy2018.myseries.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,35 +11,28 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "serie")
 public class Serie {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	private String name;
 	private String description;
 	private String image;
-	
-	@OneToMany(mappedBy = "serie")
-	private Set<Season> seasons;
-	
-	@ManyToMany(mappedBy = "series")
-	private Set<Watchlist> watchlists;
-	
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "serie_genre", joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"))
-	private Set<Genre> genres;
-	
+	private Set<Genre> genres = new HashSet<>();
+
 	public Serie(){
-		
+
 	}
-	
+
 	public Serie(String name, String description) {
 		this.name = name;
 		this.description = description;
@@ -76,22 +70,6 @@ public class Serie {
 		this.image = image;
 	}
 
-	public Set<Season> getSeasons() {
-		return seasons;
-	}
-
-	public void setSeasons(Set<Season> seasons) {
-		this.seasons = seasons;
-	}
-
-	public Set<Watchlist> getWatchlists() {
-		return watchlists;
-	}
-
-	public void setWatchlists(Set<Watchlist> watchlists) {
-		this.watchlists = watchlists;
-	}
-
 	public Set<Genre> getGenres() {
 		return genres;
 	}
@@ -99,7 +77,7 @@ public class Serie {
 	public void setGenres(Set<Genre> genres) {
 		this.genres = genres;
 	}
-	
-	
-	
+
+
+
 }

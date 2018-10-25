@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import com.centralesupelec.osy2018.myseries.models.User;
 import com.centralesupelec.osy2018.myseries.models.Watchlist;
 import com.centralesupelec.osy2018.myseries.models.dto.ManagedUserVM;
-import com.centralesupelec.osy2018.myseries.models.dto.UserDTO;
 import com.centralesupelec.osy2018.myseries.repository.UserRepository;
 import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
 
@@ -43,7 +42,7 @@ public class UserController {
 		newUser.setEmail(managedUserVM.getEmail());
 		newUser.setDescription(managedUserVM.getDescription());
 		newUser.setDateCreation(ZonedDateTime.now());
-		
+
 		userRepository.save(newUser);
 
 		Watchlist watchlist = new Watchlist();

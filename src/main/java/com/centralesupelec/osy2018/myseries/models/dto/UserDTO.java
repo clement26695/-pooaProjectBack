@@ -7,8 +7,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.centralesupelec.osy2018.myseries.models.User;
-
 public class UserDTO {
 
   private Long id;

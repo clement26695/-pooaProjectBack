@@ -113,7 +113,7 @@ public class MovieDBImporter {
 	}
 
 	public void showInfoImporter(int tmdbShowId, Serie serie) {
-		String url = baseURL + "/" + tmdbShowId;
+        String url = baseURL + "/" + tmdbShowId;
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
 					.queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();
@@ -143,9 +143,11 @@ public class MovieDBImporter {
 						}
 					}
 
-					genre.getSeries().add(serie);
+                    this.genreRepository.save(genre);
 
-					this.genreRepository.save(genre);
+                    serie.getGenres().add(genre);
+
+                    this.serieRepository.save(serie);
 
 				});
 			}
