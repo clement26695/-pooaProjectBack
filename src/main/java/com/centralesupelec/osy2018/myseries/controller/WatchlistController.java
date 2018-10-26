@@ -32,11 +32,11 @@ public class WatchlistController {
     if (watchlist.isPresent()) {
       return watchlist.get().getSeries();
     }
-    
+
     return null;
   }
 
-  @GetMapping(value = "add/userId/{userId}/serieId/{serieId}")
+  @GetMapping(value = "/add/userId/{userId}/serieId/{serieId}")
   public @ResponseBody String addSerieToWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
     Optional<Watchlist> watchlistResponse = watchlistRepository.findOneByUserId(userId);
     Optional<Serie> serieResponse = serieRepository.findById(serieId);
@@ -73,5 +73,5 @@ public class WatchlistController {
 
     return null;
   }
-  
+
 }

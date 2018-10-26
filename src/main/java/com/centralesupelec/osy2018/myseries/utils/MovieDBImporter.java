@@ -6,19 +6,12 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import org.hibernate.exception.ConstraintViolationException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-
 import com.centralesupelec.osy2018.myseries.models.Actor;
 import com.centralesupelec.osy2018.myseries.models.ActorEpisode;
 import com.centralesupelec.osy2018.myseries.models.Director;
 import com.centralesupelec.osy2018.myseries.models.Episode;
 import com.centralesupelec.osy2018.myseries.models.Genre;
+import com.centralesupelec.osy2018.myseries.models.Person;
 import com.centralesupelec.osy2018.myseries.models.Season;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.ActorEpisodeRepository;
@@ -26,12 +19,19 @@ import com.centralesupelec.osy2018.myseries.repository.ActorRepository;
 import com.centralesupelec.osy2018.myseries.repository.DirectorRepository;
 import com.centralesupelec.osy2018.myseries.repository.EpisodeRepository;
 import com.centralesupelec.osy2018.myseries.repository.GenreRepository;
+import com.centralesupelec.osy2018.myseries.repository.PersonRepository;
 import com.centralesupelec.osy2018.myseries.repository.SeasonRepository;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MovieDBImporter {
@@ -54,9 +54,12 @@ public class MovieDBImporter {
 
 	@Autowired
 	private ActorEpisodeRepository actorEpisodeRepository;
-	
+
 	@Autowired
-	private GenreRepository genreRepository;
+    private GenreRepository genreRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
 
 	public void showImporter(int pageLimit) {
 		int page = 1;
@@ -110,43 +113,45 @@ public class MovieDBImporter {
 	}
 
 	public void showInfoImporter(int tmdbShowId, Serie serie) {
-		String url = baseURL + "/" + tmdbShowId;
+        String url = baseURL + "/" + tmdbShowId;
 		try {
 			HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
 					.queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();
 			JSONObject jsonObject = jsonResponse.getBody().getObject();
 
-			String keyGenre = "genre";
+			String keyGenre = "genres";
 			if (!jsonObject.isNull(keyGenre)) {
 				JSONArray genres = jsonObject.getJSONArray(keyGenre);
 				genres.forEach(s -> {
 					JSONObject genreTMDB = (JSONObject) s;
 					Genre genre = new Genre();
-					
+
 					String key = "id";
 					if (!genreTMDB.isNull(key)) {
 						Long id = genreTMDB.getLong(key);
-						
+
 						Optional<Genre> genreOptional = genreRepository.findById(id);
 						if (genreOptional.isPresent()) {
 							genre = genreOptional.get();
 						} else {
 							genre.setId(id);
-							
+
 							key = "name";
 							if (!genreTMDB.isNull(key)) {
 								genre.setName(genreTMDB.getString(key));
 							}
 						}
 					}
-					
-					genre.getSeries().add(serie);
-					
-					this.genreRepository.save(genre);
-					
+
+                    this.genreRepository.save(genre);
+
+                    serie.getGenres().add(genre);
+
+                    this.serieRepository.save(serie);
+
 				});
 			}
-			
+
 			String keySeasons = "seasons";
 			if (!jsonObject.isNull(keySeasons)) {
 				JSONArray seasons = jsonObject.getJSONArray(keySeasons);
@@ -158,20 +163,20 @@ public class MovieDBImporter {
 					if (!seasonTMDB.isNull(key)) {
 						season.setName(seasonTMDB.getString(key));
 					}
-					
+
 					key = "season_number";
 					if (!seasonTMDB.isNull(key)) {
 						int seasonNumber = seasonTMDB.getInt(key);
 						season.setSeasonNumber(seasonNumber);
 					}
-					
+
 					key = "poster_path";
 					if (!seasonTMDB.isNull(key)) {
 						String imageURL = seasonTMDB.getString(key);
 						season.setImageURL(imageURL);
 					}
-					
-					
+
+
 
 					season.setSerie(serie);
 					this.seasonRepository.save(season);
@@ -226,18 +231,18 @@ public class MovieDBImporter {
 
 						episode.setDescription(description);
 					}
-					
+
 					key = "still_path";
 					if (!episodeTMDB.isNull(key)) {
 						String imageURL = episodeTMDB.getString(key);
-						
+
 						episode.setImageURL(imageURL);
 					}
-					
+
 					key = "episode_number";
 					if (!episodeTMDB.isNull(key)) {
 						int episodeNumber = episodeTMDB.getInt(key);
-						
+
 						episode.setEpisodeNumber(episodeNumber);
 					}
 
@@ -284,50 +289,54 @@ public class MovieDBImporter {
 							lastName = name.substring(index + 1);
 						} else {
 							lastName = name;
-						}
+                        }
 
-						actor.setFirstName(firstName);
-						actor.setLastName(lastName);
+                        Optional<Actor> actorOptional = this.actorRepository.findOneByFirstNameAndLastName(firstName, lastName);
+
+                        if (actorOptional.isPresent()) {
+                            actor = actorOptional.get();
+
+                        } else {
+
+                            Optional<Person> personOptional = this.personRepository
+                                .findOneByFirstNameAndLastName(firstName, lastName);
+
+                            if (personOptional.isPresent()) {
+                                Long id = personOptional.get().getId();
+                                this.actorRepository.addActorIfAlreadyInPerson(id);
+                                actor = this.actorRepository.findById(id).get();
+                            } else {
+                                actor.setFirstName(firstName);
+                                actor.setLastName(lastName);
+
+                                key = "profile_path";
+                                if (!castTMDB.isNull(key)) {
+                                    String imagePath = castTMDB.getString(key);
+
+                                    actor.setImage(imagePath);
+                                }
+
+                                this.actorRepository.save(actor);
+                            }
+                        }
 					}
 
-					key = "profile_path";
-					if (!castTMDB.isNull(key)) {
-						String imagePath = castTMDB.getString(key);
+                    ActorEpisode actorEpisode = new ActorEpisode();
+                    actorEpisode.setActor(actor);
+                    actorEpisode.setEpisode(episode);
+                    key = "character";
+                    if (!castTMDB.isNull(key)) {
+                        String characterName = castTMDB.getString(key);
 
-						actor.setImage(imagePath);
-					}
+                        actorEpisode.setCharacterName(characterName);
+                    }
 
-					try {
-						this.actorRepository.save(actor);
-
-						ActorEpisode actorEpisode = new ActorEpisode();
-						actorEpisode.setActor(actor);
-						actorEpisode.setEpisode(episode);
-						key = "character";
-						if (!castTMDB.isNull(key)) {
-							String characterName = castTMDB.getString(key);
-
-							actorEpisode.setCharacterName(characterName);
-						}
-
-						this.actorEpisodeRepository.save(actorEpisode);
-
-					} catch (DataIntegrityViolationException e) {
-						Throwable t = e.getCause();
-						while ((t != null) && !(t instanceof ConstraintViolationException)) {
-							t = t.getCause();
-						}
-						if (t instanceof ConstraintViolationException) {
-							System.out.println("Person with firstname " + actor.getFirstName() + " and lastname "
-									+ actor.getLastName() + " is already in the database");
-
-						}
-					}
+                    this.actorEpisodeRepository.save(actorEpisode);
 
 				});
 			}
 
-			String keyCrew = "cast";
+			String keyCrew = "crew";
 			if (!jsonObject.isNull(keyCrew)) {
 
 				JSONArray crewResults = jsonObject.getJSONArray("crew");
@@ -338,7 +347,7 @@ public class MovieDBImporter {
 					String key = "job";
 					if (!crewTMDB.isNull(key)) {
 
-						if (crewTMDB.getString(key) == "Director") {
+						if (crewTMDB.getString(key).equals("Director")) {
 							Director director = new Director();
 
 							key = "name";
@@ -354,31 +363,38 @@ public class MovieDBImporter {
 									lastName = name;
 								}
 
-								director.setFirstName(firstName);
-								director.setFirstName(lastName);
-							}
+                                Optional<Director> directorOptional = this.directorRepository
+                                        .findOneByFirstNameAndLastName(firstName, lastName);
 
-							key = "profile_path";
-							if (!crewTMDB.isNull(key)) {
-								String imagePath = crewTMDB.getString(key);
-								director.setImage(imagePath);
-							}
+                                if (directorOptional.isPresent()) {
+                                    director = directorOptional.get();
 
-							director.addEpisode(episode);
+                                } else {
 
-							try {
-								this.directorRepository.save(director);
-							} catch (DataIntegrityViolationException e) {
-								Throwable t = e.getCause();
-								while ((t != null) && !(t instanceof ConstraintViolationException)) {
-									t = t.getCause();
-								}
-								if (t instanceof ConstraintViolationException) {
-									System.out.println("Person with firstname " + director.getFirstName() + " and lastname "
-											+ director.getLastName() + " is already in the database");
+                                    Optional<Person> personOptional = this.personRepository
+                                            .findOneByFirstNameAndLastName(firstName, lastName);
 
-								}
-							}
+                                    if (personOptional.isPresent()) {
+                                        Long id = personOptional.get().getId();
+                                        this.directorRepository.addDirectorIfAlreadyInPerson(id);
+                                        director = this.directorRepository.findById(id).get();
+                                    } else {
+                                        director.setFirstName(firstName);
+                                        director.setLastName(lastName);
+
+                                        key = "profile_path";
+                                        if (!crewTMDB.isNull(key)) {
+                                            String imagePath = crewTMDB.getString(key);
+                                            director.setImage(imagePath);
+                                        }
+                                    }
+                                }
+                            }
+
+                            this.directorRepository.save(director);
+
+                            episode.setDirector(director);
+                            this.episodeRepository.save(episode);
 						}
 					}
 				});

@@ -23,7 +23,7 @@ jobs:
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
-    
+
     steps:
       - checkout
 
@@ -46,7 +46,7 @@ jobs:
 
       - store_test_results:
           path: target/surefire-reports
-      
+
       - run: mvn package -Dmaven.test.skip=true
 
       - run: ls -al ~/repo/target/
@@ -59,7 +59,7 @@ jobs:
           root: ~/repo
           paths:
             - target/*.jar
-  
+
   deploy:
     <<: *defaults
     machine:
@@ -70,7 +70,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            scp ~/repo/target/*.jar $SSH_USER@$SSH_HOST:~
+            scp ~/repo/target/*.jar $SSH_USER@$SSH_HOST:~/back
 
 workflows:
   version: 2
