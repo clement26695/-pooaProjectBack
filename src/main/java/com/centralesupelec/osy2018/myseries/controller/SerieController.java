@@ -53,5 +53,10 @@ public class SerieController {
    		return serieRepository.findByName(name);
 	}
 	
+	@RequestMapping(value = "/genre/{genre}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Serie> getSerieByGenre(@PathVariable("genre") String genre) {
+   		return serieRepository.findByGenreName(genre);
+	}
 	
 }

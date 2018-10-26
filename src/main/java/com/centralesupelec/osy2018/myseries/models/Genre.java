@@ -19,6 +19,9 @@ public class Genre {
 	@ManyToMany(mappedBy = "genres")
 	private Set<Serie> series;
 	
+	@ManyToMany(mappedBy = "genres")
+	private Set<User> users;
+	
 	public Genre() {
 		super();
 	}

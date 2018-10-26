@@ -1,27 +1,31 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
-
-import com.centralesupelec.osy2018.myseries.models.User;
-import com.centralesupelec.osy2018.myseries.models.Watchlist;
-import com.centralesupelec.osy2018.myseries.models.dto.ManagedUserVM;
-import com.centralesupelec.osy2018.myseries.models.dto.UserDTO;
-import com.centralesupelec.osy2018.myseries.repository.UserRepository;
-import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.centralesupelec.osy2018.myseries.models.Genre;
+import com.centralesupelec.osy2018.myseries.models.User;
+import com.centralesupelec.osy2018.myseries.models.Watchlist;
+import com.centralesupelec.osy2018.myseries.models.dto.ManagedUserVM;
+import com.centralesupelec.osy2018.myseries.repository.GenreRepository;
+import com.centralesupelec.osy2018.myseries.repository.UserRepository;
+import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
 
 @Controller
 @RequestMapping(path="/api")
@@ -30,7 +34,9 @@ public class UserController {
 	private UserRepository userRepository;
 	@Autowired
 	private WatchlistRepository watchlistRepository;
-
+	@Autowired
+	private GenreRepository genreRepository;
+	
 	@PostMapping(path="/register")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addNewUser (@Valid @RequestBody ManagedUserVM managedUserVM) {
@@ -66,4 +72,12 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
 	}
+	
+	@RequestMapping(value = "/user/id/{id}/genres", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Genre> getGenreByUserId(@PathVariable("id") Long id) {
+   		return genreRepository.findByUserId(id);
+	}
+	
+	
 }

@@ -4,12 +4,15 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -62,6 +65,10 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	private Set<Notification> notifications;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_genre", joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	private Set<Genre> genres;
 	
 	public User() {
 	}

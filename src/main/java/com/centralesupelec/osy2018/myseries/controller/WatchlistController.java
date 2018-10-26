@@ -36,7 +36,7 @@ public class WatchlistController {
     return null;
   }
 
-  @GetMapping(value = "/userId/{userId}/serieId/{serieId}")
+  @GetMapping(value = "add/userId/{userId}/serieId/{serieId}")
   public @ResponseBody String addSerieToWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
     Optional<Watchlist> watchlistResponse = watchlistRepository.findOneByUserId(userId);
     Optional<Serie> serieResponse = serieRepository.findById(serieId);
@@ -55,4 +55,23 @@ public class WatchlistController {
     return null;
   }
 
+  @GetMapping(value = "remove/userId/{userId}/serieId/{serieId}")
+  public @ResponseBody String removeSerieFromWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
+    Optional<Watchlist> watchlistResponse = watchlistRepository.findOneByUserId(userId);
+    Optional<Serie> serieResponse = serieRepository.findById(serieId);
+
+    if (watchlistResponse.isPresent() && serieResponse.isPresent()) {
+      Watchlist watchlist = watchlistResponse.get();
+      Serie serie = serieResponse.get();
+
+      watchlist.getSeries().remove(serie);
+
+      watchlistRepository.save(watchlist);
+
+      return "Delete";
+    }
+
+    return null;
+  }
+  
 }
