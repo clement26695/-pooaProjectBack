@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "episode")
 public class Episode {
@@ -35,6 +37,7 @@ public class Episode {
 	@JoinColumn(name = "director_id")
 	private Director director;
 
+    @JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "season_id")
 	private Season season;
@@ -112,6 +115,6 @@ public class Episode {
 	public void setTmdbId(long tmdbId) {
 		this.tmdbId = tmdbId;
 	}
-	
-	
+
+
 }
