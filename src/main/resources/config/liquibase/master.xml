@@ -19,5 +19,7 @@
     <include
         file="config/liquibase/changelog/2018-10-23T20:47:28Z_add_notification_table.xml"
         relativeToChangelogFile="false" />
-
+    <include
+        file="config/liquibase/changelog/2018-10-26T21:00:00Z_add_genre_user_relationship.xml"
+        relativeToChangelogFile="false" />
 </databaseChangeLog>

@@ -26,7 +26,7 @@ public class Serie {
 	private String image;
 
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "serie_genre", joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"))
+	@JoinTable(name = "serie_genre", joinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<Genre> genres = new HashSet<>();
 
 	public Serie(){
