@@ -41,18 +41,18 @@ public class MovieDBImporter {
 	}
 
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    // @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void importDataFromTMDBApi() {
         // System.out.println("1");
         // this.serieImporter.importSerie(1);
         // System.out.println("2");
-        // Iterable<Serie> series = this.serieRepository.findAll();
-        // for (Serie serie : series) {
-        //     System.out.println("Import seasons from : " + serie.getName());
-        //     this.seasonImporter.importSeason(serie);
-        //     System.out.println("Import genres from : " + serie.getName());
-        //     this.genreImporter.importGenre(serie);
-        // }
+        Iterable<Serie> series = this.serieRepository.findAll();
+        for (Serie serie : series) {
+            // System.out.println("Import seasons from : " + serie.getName());
+            // this.seasonImporter.importSeason(serie);
+            System.out.println("Import genres from : " + serie.getName());
+            this.genreImporter.importGenre(serie);
+        }
 
         // Iterable<Season> seasons = this.seasonRepository.findAll();
         // for (Season season : seasons) {
@@ -60,10 +60,10 @@ public class MovieDBImporter {
         //     this.episodeImporter.importEpisode(season);
         // }
 
-        Iterable<Episode> episodes = this.episodeRepository.findAll();
-        for (Episode episode : episodes) {
-            this.actorImporter.importActor(episode);
-            this.directorImporter.importDirector(episode);
-        }
+        // Iterable<Episode> episodes = this.episodeRepository.findAll();
+        // for (Episode episode : episodes) {
+        //     this.actorImporter.importActor(episode);
+        //     this.directorImporter.importDirector(episode);
+        // }
     }
 }
