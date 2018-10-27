@@ -15,11 +15,11 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "person", uniqueConstraints = @UniqueConstraint(columnNames = { "first_name", "last_name" }))
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Person {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@Size(max = 50)
@@ -33,6 +33,8 @@ public class Person {
 	private String image;
 
 	private LocalDate birthdate;
+
+	private long tmdbId;
 
 	public Person() {}
 
@@ -82,6 +84,14 @@ public class Person {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public long getTmdbId() {
+		return tmdbId;
+	}
+
+	public void setTmdbId(long tmdbId) {
+		this.tmdbId = tmdbId;
 	}
 
     @Override

@@ -16,36 +16,38 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "episode")
 public class Episode {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
+
 	private String name;
 	private ZonedDateTime airDate;
 	private String description;
-	
+
 	@Column(name = "image_url")
 	private String imageURL;
-	
+
 	@Column(name = "episode_number")
 	private int episodeNumber;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "director_id")
 	private Director director;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "season_id")
 	private Season season;
 
 	@OneToMany(mappedBy = "episode")
-	private Set<ActorEpisode> actorepisode;
+    private Set<ActorEpisode> actorepisode;
+
+    private long tmdbId;
 
 	public Episode(){
-		
+
 	}
-  	
+
 	public long getId() {
 		return id;
 	}
@@ -70,8 +72,8 @@ public class Episode {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-  
-  public Director getDirector() {
+
+	public Director getDirector() {
 		return director;
 	}
 
@@ -86,7 +88,7 @@ public class Episode {
 	public void setSeason(Season season) {
 		this.season = season;
 	}
-	
+
 	public String getImageURL() {
 		return imageURL;
 	}
@@ -102,5 +104,14 @@ public class Episode {
 	public void setEpisodeNumber(int episodeNumber) {
 		this.episodeNumber = episodeNumber;
 	}
+
+	public long getTmdbId() {
+		return tmdbId;
+	}
+
+	public void setTmdbId(long tmdbId) {
+		this.tmdbId = tmdbId;
+	}
+	
 	
 }
