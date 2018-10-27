@@ -5,12 +5,8 @@ import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
-<<<<<<< HEAD
-import com.centralesupelec.osy2018.myseries.utils.MovieDBImporter;
 import com.centralesupelec.osy2018.myseries.utils.NotificationUtils;
-=======
 import com.centralesupelec.osy2018.myseries.utils.api_importer.MovieDBImporter;
->>>>>>> d3d8f6774147fb5a63995c8ebe542014bbbbd0e8
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,14 +23,10 @@ public class SerieController {
 	private final MovieDBImporter movieDBImporter;
 
 	@Autowired
-<<<<<<< HEAD
     private SerieRepository serieRepository;
 
     @Autowired
     private NotificationUtils notificationUtils;
-=======
-	private SerieRepository serieRepository;
->>>>>>> d3d8f6774147fb5a63995c8ebe542014bbbbd0e8
 
 	public SerieController(MovieDBImporter movieDBImporter) {
 		this.movieDBImporter = movieDBImporter;
@@ -62,7 +54,6 @@ public class SerieController {
 	@ResponseBody
 	public List<Serie> getSerieByName(@PathVariable("name") String name) {
    		return serieRepository.findByName(name);
-<<<<<<< HEAD
     }
 
     @RequestMapping(value = "/notifications/tomorrow", method = RequestMethod.GET)
@@ -70,9 +61,6 @@ public class SerieController {
     public void getSerieTommorow() {
         this.notificationUtils.notifyUsersForEpisodeTomorrow();
     }
-=======
-	}
->>>>>>> d3d8f6774147fb5a63995c8ebe542014bbbbd0e8
 
 
 }
