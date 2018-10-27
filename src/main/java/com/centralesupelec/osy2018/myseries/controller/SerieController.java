@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
+import com.centralesupelec.osy2018.myseries.utils.NotificationUtils;
 import com.centralesupelec.osy2018.myseries.utils.api_importer.MovieDBImporter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,10 @@ public class SerieController {
 	private final MovieDBImporter movieDBImporter;
 
 	@Autowired
-	private SerieRepository serieRepository;
+    private SerieRepository serieRepository;
+
+    @Autowired
+    private NotificationUtils notificationUtils;
 
 	public SerieController(MovieDBImporter movieDBImporter) {
 		this.movieDBImporter = movieDBImporter;
@@ -50,7 +54,13 @@ public class SerieController {
 	@ResponseBody
 	public List<Serie> getSerieByName(@PathVariable("name") String name) {
    		return serieRepository.findByName(name);
-	}
+    }
+
+    @RequestMapping(value = "/notifications/tomorrow", method = RequestMethod.GET)
+    @ResponseBody
+    public void getSerieTommorow() {
+        this.notificationUtils.notifyUsersForEpisodeTomorrow();
+    }
 
 
 }
