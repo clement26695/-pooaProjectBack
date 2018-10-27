@@ -27,7 +27,9 @@ public class Season {
 	@ManyToOne
 	@JoinColumn(name = "serie_id")
 	private Serie serie;
-
+	
+	private long tmdbId;
+	
 	public Season() {
 
 	}
@@ -73,6 +75,13 @@ public class Season {
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
 	}
+	
+	public long getTmdbId() {
+		return tmdbId;
+	}
 
+	public void setTmdbId(long tmdbId) {
+		this.tmdbId = tmdbId;
+	}
 
 }

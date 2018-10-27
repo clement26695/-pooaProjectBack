@@ -24,11 +24,13 @@ public class Serie {
 	private String name;
 	private String description;
 	private String image;
+	
+	private Long tmdbId;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "serie_genre", joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"))
 	private Set<Genre> genres = new HashSet<>();
-
+	
 	public Serie(){
 
 	}
@@ -77,7 +79,13 @@ public class Serie {
 	public void setGenres(Set<Genre> genres) {
 		this.genres = genres;
 	}
+	
+	public long getTmdbId() {
+		return tmdbId;
+	}
 
-
+	public void setTmdbId(long tmdbId) {
+		this.tmdbId = tmdbId;
+	}
 
 }
