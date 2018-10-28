@@ -1,17 +1,18 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.Genre;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.models.dto.PreferenceDTO;
 import com.centralesupelec.osy2018.myseries.repository.GenreRepository;
+import com.centralesupelec.osy2018.myseries.utils.GenreUtils;
 import com.centralesupelec.osy2018.myseries.utils.RecommendationUtils;
+import com.centralesupelec.osy2018.myseries.utils.factory.PreferenceDTOFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,9 +32,6 @@ public class GenreController {
 	@Autowired
     private GenreRepository genreRepository;
 
-    @Autowired
-    private RecommendationUtils recommendationUtils;
-
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<Genre> genresAll(){
 		return genreRepository.findAll();
@@ -45,35 +43,4 @@ public class GenreController {
    		return genreRepository.findById(id);
     }
 
-    /*
-    @params: Map avec comme clé: Id du genre, valeur: score associé au genre
-    */
-    @PostMapping(value = "/testPreferences", produces = "application/json")
-    @ResponseBody
-    public List<PreferenceDTO> getPreferences(@RequestBody Map<Long, Double> genreScores) {
-        Map<Genre, Double> map = new HashMap<>();
-
-        for (Long id : genreScores.keySet()) {
-            Optional<Genre> genre = this.genreRepository.findById(id);
-
-            if (genre.isPresent()) {
-                map.put(genre.get(), genreScores.get(id));
-            }
-        }
-
-        List<Entry<Serie, Double>> entries = this.recommendationUtils.computeRecommendation(map);
-
-        List<PreferenceDTO> preferences = new ArrayList<>();
-
-        for (Entry<Serie, Double> entry : entries) {
-            PreferenceDTO preferenceDTO = new PreferenceDTO();
-            preferenceDTO.setSerie(entry.getKey());
-            preferenceDTO.setScore(entry.getValue());
-
-            preferences.add(preferenceDTO);
-        }
-
-        return preferences;
-
-    }
 }
