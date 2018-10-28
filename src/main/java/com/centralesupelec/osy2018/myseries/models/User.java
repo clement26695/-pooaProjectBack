@@ -66,7 +66,7 @@ public class User {
 	private Set<Notification> notifications;
 
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "user_genre", joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	@JoinTable(name = "user_genre", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<Genre> genres;
 
 	public User() {
@@ -156,5 +156,13 @@ public class User {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
+    }
+
+    public Set<Genre> getGenres(){
+        return this.genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
+    }
 }

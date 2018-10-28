@@ -55,7 +55,7 @@ public class WatchlistController {
     return null;
   }
 
-  @GetMapping(value = "remove/userId/{userId}/serieId/{serieId}")
+  @GetMapping(value = "/remove/userId/{userId}/serieId/{serieId}")
   public @ResponseBody String removeSerieFromWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
     Optional<Watchlist> watchlistResponse = watchlistRepository.findOneByUserId(userId);
     Optional<Serie> serieResponse = serieRepository.findById(serieId);

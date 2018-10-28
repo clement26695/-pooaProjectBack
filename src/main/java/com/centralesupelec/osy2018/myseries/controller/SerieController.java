@@ -19,12 +19,12 @@ import com.centralesupelec.osy2018.myseries.repository.*;
 @Controller
 @RequestMapping(path="/api/serie")
 public class SerieController {
-	
+
 	private final MovieDBImporter movieDBImporter;
 
 	@Autowired
 	private SerieRepository serieRepository;
-	
+
 	public SerieController(MovieDBImporter movieDBImporter) {
 		this.movieDBImporter = movieDBImporter;
 	}
@@ -52,11 +52,5 @@ public class SerieController {
 	public List<Serie> getSerieByName(@PathVariable("name") String name) {
    		return serieRepository.findByName(name);
 	}
-	
-	@RequestMapping(value = "/genre/{genre}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Serie> getSerieByGenre(@PathVariable("genre") String genre) {
-   		return serieRepository.findByGenreName(genre);
-	}
-	
+
 }
