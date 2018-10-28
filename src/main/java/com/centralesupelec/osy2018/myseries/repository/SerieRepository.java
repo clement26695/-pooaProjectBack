@@ -13,10 +13,11 @@ import com.centralesupelec.osy2018.myseries.models.Serie;
 public interface SerieRepository extends CrudRepository<Serie, Long> {
 
     List<Serie> findByName(String name);
-    
-    @Query(value = "SELECT serie.* FROM serie "
-			+"INNER JOIN serie_genre ON serie.id = serie_genre.serie_id "
-			+"INNER JOIN genre ON genre.id = serie_genre.genre_id "
-			+"WHERE genre.name = ?1", nativeQuery = true)
-    List<Serie> findByGenreName(String genre);
+
+    @Query(value = "SELECT serie.* FROM serie " +
+    "INNER JOIN season ON serie.id = season.serie_id " +
+    "INNER JOIN episode ON season.id = episode.season_id " +
+    "WHERE episode.air_date BETWEEN NOW() AND NOW() + INTERVAL 1 DAY " +
+    "GROUP BY id", nativeQuery = true)
+    List<Serie> findSerieWithEpisodeTomorrow();
 }

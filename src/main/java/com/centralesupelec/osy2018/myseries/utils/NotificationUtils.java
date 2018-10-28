@@ -1,21 +1,43 @@
 package com.centralesupelec.osy2018.myseries.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
-import com.centralesupelec.osy2018.myseries.models.Notification;
+import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.models.User;
-import com.centralesupelec.osy2018.myseries.repository.NotificationRepository;
+import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
+import com.centralesupelec.osy2018.myseries.repository.UserRepository;
+import com.centralesupelec.osy2018.myseries.utils.factory.NotificationFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+@Service
 public class NotificationUtils {
-	@Autowired
-	private NotificationRepository notificationRepository;
-	
-	public void addNotification(User user, String message) {
-		Notification notification = new Notification();
-		
-		notification.setMessage(message);
-		
-		notification.setUser(user);
-		notificationRepository.save(notification);
-	}
+
+    Logger logger = LoggerFactory.getLogger(NotificationUtils.class);
+    @Autowired
+    private SerieRepository serieRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired NotificationFactory notificationFactory;
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void notifyUsersForEpisodeTomorrow() {
+        logger.info("Create Notification for Tomorrow");
+
+        List<Serie> series = this.serieRepository.findSerieWithEpisodeTomorrow();
+
+        series.forEach(serie -> {
+            List<User> users = this.userRepository.findUserWithSerieInWatchlist(serie.getId());
+
+            for (User user : users) {
+                notificationFactory.createNotification(user, "A new episode of " + serie.getName() + " will be aired in the next 24h. Be ready !");
+            }
+        });
+    }
 }

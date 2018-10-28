@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="clementdessoude" id="change-inheritance-type">
+        <dropTable cascadeConstraints="true" tableName="person"/>
+
+        <addColumn tableName="actor">
+            <column name="birthdate" type="date"/>
+        </addColumn>
+        <addColumn tableName="actor">
+            <column name="first_name" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="actor">
+            <column name="last_name" type="VARCHAR(50)"/>
+        </addColumn>
+        <addUniqueConstraint columnNames="last_name, first_name" constraintName="unique_lastName_firstName" tableName="actor" />
+
+
+        <addColumn tableName="director">
+            <column name="birthdate" type="date"/>
+        </addColumn>
+        <addColumn tableName="director">
+            <column name="first_name" type="VARCHAR(50)"/>
+        </addColumn>
+        <addColumn tableName="director">
+            <column name="last_name" type="VARCHAR(50)"/>
+        </addColumn>
+        <addUniqueConstraint columnNames="last_name, first_name" constraintName="unique_lastName_firstName" tableName="director" />
+
+    </changeSet>
+    <changeSet author="clementdessoude" id="change-inheritance-type-2">
+        <addAutoIncrement columnDataType="BIGINT" columnName="id" tableName="director"/>
+        <addAutoIncrement columnDataType="BIGINT" columnName="id" tableName="actor"/>
+    </changeSet>
+
+    <changeSet author="clementdessoude" id="change-inheritance-type-3">
+        <addColumn tableName="director">
+            <column name="image" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="director">
+            <column name="tmdb_id" type="BIGINT"/>
+        </addColumn>
+        <addColumn tableName="actor">
+            <column name="image" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="actor">
+            <column name="tmdb_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

@@ -11,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "serie")
@@ -24,10 +27,15 @@ public class Serie {
 	private String name;
 	private String description;
 	private String image;
+	private Long tmdbId;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "serie_genre", joinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<Genre> genres = new HashSet<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "serie")
+    Set<Season> seasons = new HashSet<>();
 
 	public Serie(){
 
@@ -78,6 +86,20 @@ public class Serie {
 		this.genres = genres;
 	}
 
+	public long getTmdbId() {
+		return tmdbId;
+	}
 
+	public void setTmdbId(long tmdbId) {
+		this.tmdbId = tmdbId;
+    }
+
+    public Set<Season> getSeasons() {
+        return seasons;
+    }
+
+    public void setSeasons(Set<Season> seasons) {
+        this.seasons = seasons;
+    }
 
 }

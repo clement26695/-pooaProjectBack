@@ -2,16 +2,16 @@ package com.centralesupelec.osy2018.myseries.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.Genre;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.models.dto.PreferenceDTO;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
 import com.centralesupelec.osy2018.myseries.utils.GenreUtils;
-import com.centralesupelec.osy2018.myseries.utils.MovieDBImporter;
 import com.centralesupelec.osy2018.myseries.utils.RecommendationUtils;
+import com.centralesupelec.osy2018.myseries.utils.api_importer.MovieDBImporter;
 import com.centralesupelec.osy2018.myseries.utils.factory.PreferenceDTOFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class SerieController {
 
 	@GetMapping(path="/refresh")
 	public @ResponseBody String refresh() {
-		this.movieDBImporter.showImporter(1);
+		this.movieDBImporter.importDataFromTMDBApi();
 		return "Saved";
 	}
 
