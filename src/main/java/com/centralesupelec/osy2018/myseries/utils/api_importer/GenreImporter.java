@@ -59,10 +59,10 @@ public class GenreImporter {
                             if (!genreTMDB.isNull(key)) {
                                 genre.setName(genreTMDB.getString(key));
                             }
+
+                            this.genreRepository.save(genre);
                         }
                     }
-
-                    this.genreRepository.save(genre);
 
                     serie.getGenres().add(genre);
 

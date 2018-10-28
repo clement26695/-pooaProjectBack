@@ -3,6 +3,7 @@ package com.centralesupelec.osy2018.myseries.repository;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.Episode;
 
@@ -11,4 +12,6 @@ import com.centralesupelec.osy2018.myseries.models.Episode;
 
 public interface EpisodeRepository extends CrudRepository<Episode, Long> {
     List<Episode> findBySeasonId(long id);
+
+    Optional<Episode> findByTmdbId(long id);
 }

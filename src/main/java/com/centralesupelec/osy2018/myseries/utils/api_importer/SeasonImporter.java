@@ -1,5 +1,7 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
+import java.util.Optional;
+
 import com.centralesupelec.osy2018.myseries.config.Constants;
 import com.centralesupelec.osy2018.myseries.models.Season;
 import com.centralesupelec.osy2018.myseries.models.Serie;
@@ -39,28 +41,32 @@ public class SeasonImporter {
                     JSONObject seasonTMDB = (JSONObject) s;
                     Season season = new Season();
 
-                    season.setTmdbId(seasonTMDB.getLong("id"));
+                    Long id = seasonTMDB.getLong("id");
+                    Optional<Season> databaseSeason= this.seasonRepository.findByTmdbId(id);
 
-                    String key = "name";
-                    if (!seasonTMDB.isNull(key)) {
-                        season.setName(seasonTMDB.getString(key));
+                    if (!databaseSeason.isPresent()) {
+                        season.setTmdbId(id);
+
+                        String key = "name";
+                        if (!seasonTMDB.isNull(key)) {
+                            season.setName(seasonTMDB.getString(key));
+                        }
+
+                        key = "season_number";
+                        if (!seasonTMDB.isNull(key)) {
+                            int seasonNumber = seasonTMDB.getInt(key);
+                            season.setSeasonNumber(seasonNumber);
+                        }
+
+                        key = "poster_path";
+                        if (!seasonTMDB.isNull(key)) {
+                            String imageURL = seasonTMDB.getString(key);
+                            season.setImageURL(imageURL);
+                        }
+
+                        season.setSerie(serie);
+                        this.seasonRepository.save(season);
                     }
-
-                    key = "season_number";
-                    if (!seasonTMDB.isNull(key)) {
-                        int seasonNumber = seasonTMDB.getInt(key);
-                        season.setSeasonNumber(seasonNumber);
-                    }
-
-                    key = "poster_path";
-                    if (!seasonTMDB.isNull(key)) {
-                        String imageURL = seasonTMDB.getString(key);
-                        season.setImageURL(imageURL);
-                    }
-
-                    season.setSerie(serie);
-                    this.seasonRepository.save(season);
-
                 });
             }
 

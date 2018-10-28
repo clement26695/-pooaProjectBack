@@ -52,30 +52,29 @@ public class DirectorImporter {
                         if (crewTMDB.getString(key).equals("Director")) {
                             Director director = new Director();
 
-                            director.setTmdbId(crewTMDB.getLong("id"));
+                            Long id = crewTMDB.getLong("id");
+                            Optional<Director> directorOptional = this.directorRepository.findByTmdbId(id);
 
-                            key = "name";
-                            if (!crewTMDB.isNull(key)) {
-                                String name = crewTMDB.getString(key);
-                                System.out.println("Director : " + name);
-                                int index = name.lastIndexOf(" ");
-                                String firstName = "", lastName = "";
+                            if (directorOptional.isPresent()) {
+                                director = directorOptional.get();
 
-                                if (index != -1) {
-                                    firstName = name.substring(0, index);
-                                    lastName = name.substring(index + 1);
-                                } else {
-                                    lastName = name;
-                                }
+                            } else {
+                                director.setTmdbId(id);
 
-                                Optional<Director> directorOptional = this.directorRepository
-                                        .findOneByFirstNameAndLastName(firstName, lastName);
+                                key = "name";
+                                if (!crewTMDB.isNull(key)) {
+                                    String name = crewTMDB.getString(key);
+                                    System.out.println("Director : " + name);
+                                    int index = name.lastIndexOf(" ");
+                                    String firstName = "", lastName = "";
 
-                                if (directorOptional.isPresent()) {
-                                    System.out.println("In director database");
-                                    director = directorOptional.get();
+                                    if (index != -1) {
+                                        firstName = name.substring(0, index);
+                                        lastName = name.substring(index + 1);
+                                    } else {
+                                        lastName = name;
+                                    }
 
-                                } else {
                                     director.setFirstName(firstName);
                                     director.setLastName(lastName);
 
@@ -85,9 +84,8 @@ public class DirectorImporter {
                                         director.setImage(imagePath);
                                     }
                                 }
+                                this.directorRepository.save(director);
                             }
-
-                            this.directorRepository.save(director);
 
                             episode.setDirector(director);
                             this.episodeRepository.save(episode);

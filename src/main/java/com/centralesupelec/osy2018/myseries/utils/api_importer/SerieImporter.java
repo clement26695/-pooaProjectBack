@@ -1,5 +1,7 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
+import java.util.Optional;
+
 import com.centralesupelec.osy2018.myseries.config.Constants;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
@@ -40,33 +42,36 @@ public class SerieImporter {
                 shows.forEach(s -> {
                     JSONObject show = (JSONObject) s;
 
-                    Serie serie = new Serie();
+                    Long id = show.getLong("id");
+                    Optional<Serie> databaseSerie= this.serieRepository.findByTmdbId(id);
 
-                    serie.setTmdbId(show.getLong("id"));
+                    if (!databaseSerie.isPresent()) {
+                        Serie serie = new Serie();
+                        serie.setTmdbId(id);
 
-                    String key = "overview";
-                    if (!show.isNull(key)) {
-                        String description = show.getString(key);
-                        if (description.length() > 2000) {
-                            description = description.substring(0, 2000);
+                        String key = "overview";
+                        if (!show.isNull(key)) {
+                            String description = show.getString(key);
+                            if (description.length() > 2000) {
+                                description = description.substring(0, 2000);
+                            }
+
+                            serie.setDescription(description);
                         }
 
-                        serie.setDescription(description);
+                        key = "original_name";
+                        if (!show.isNull(key)) {
+                            serie.setName(show.getString(key));
+                        }
+
+                        key = "poster_path";
+                        if (!show.isNull(key)) {
+                            serie.setImage(show.getString(key));
+                        }
+
+                        System.out.println("serie importation : " + serie.getName());
+                        this.serieRepository.save(serie);
                     }
-
-                    key = "original_name";
-                    if (!show.isNull(key)) {
-                        serie.setName(show.getString(key));
-                    }
-
-                    key = "poster_path";
-                    if (!show.isNull(key)) {
-                        serie.setImage(show.getString(key));
-                    }
-
-                    System.out.println("serie importation : " + serie.getName());
-                    this.serieRepository.save(serie);
-
                 });
 
             } catch (UnirestException e) {

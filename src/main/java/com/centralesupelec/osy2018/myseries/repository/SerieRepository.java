@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.Serie;
 
@@ -20,4 +21,6 @@ public interface SerieRepository extends CrudRepository<Serie, Long> {
     "WHERE episode.air_date BETWEEN NOW() AND NOW() + INTERVAL 1 DAY " +
     "GROUP BY id", nativeQuery = true)
     List<Serie> findSerieWithEpisodeTomorrow();
+
+	Optional<Serie> findByTmdbId(long id);
 }
