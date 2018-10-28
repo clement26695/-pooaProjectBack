@@ -26,7 +26,7 @@ public class NotificationUtils {
 
     @Autowired NotificationFactory notificationFactory;
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void notifyUsersForEpisodeTomorrow() {
         logger.info("Create Notification for Tomorrow");
 
