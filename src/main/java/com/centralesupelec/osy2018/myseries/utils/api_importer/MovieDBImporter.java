@@ -1,15 +1,11 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
-import com.centralesupelec.osy2018.myseries.models.Episode;
-import com.centralesupelec.osy2018.myseries.models.Season;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.EpisodeRepository;
 import com.centralesupelec.osy2018.myseries.repository.SeasonRepository;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MovieDBImporter {
@@ -43,9 +39,8 @@ public class MovieDBImporter {
 
     // @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void importDataFromTMDBApi() {
-        // System.out.println("1");
         // this.serieImporter.importSerie(1);
-        // System.out.println("2");
+
         Iterable<Serie> series = this.serieRepository.findAll();
         for (Serie serie : series) {
             // System.out.println("Import seasons from : " + serie.getName());

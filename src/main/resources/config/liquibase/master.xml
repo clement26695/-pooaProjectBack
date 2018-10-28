@@ -2,12 +2,29 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false" />
-    <include file="config/liquibase/changelog/2018-10-12T08:00:54_add_image_field.xml" relativeToChangelogFile="false" />
-    <include file="config/liquibase/changelog/2018-10-16T14:47:28Z_changelog.xml" relativeToChangelogFile="false" />
-    <include file="config/liquibase/changelog/2018-10-23T14:47:28Z_changelog.xml" relativeToChangelogFile="false" />
-    <include file="config/liquibase/changelog/2018-10-23T20:47:28Z_add_notification_table.xml" relativeToChangelogFile="false" />
-    <include file="config/liquibase/changelog/2018-10-27T13:49:28Z_add_tmdb_ids.xml" relativeToChangelogFile="false" />
-    <include file="config/liquibase/changelog/2018-10-27T15:29:35Z_change_inheritance_type.xml" relativeToChangelogFile="false" />
+	<include
+		file="config/liquibase/changelog/00000000000000_initial_schema.xml"
+		relativeToChangelogFile="false" />
+	<include
+		file="config/liquibase/changelog/2018-10-12T08:00:54_add_image_field.xml"
+		relativeToChangelogFile="false" />
+	<include
+		file="config/liquibase/changelog/2018-10-16T14:47:28Z_changelog.xml"
+		relativeToChangelogFile="false" />
+	<include
+		file="config/liquibase/changelog/2018-10-23T14:47:28Z_changelog.xml"
+		relativeToChangelogFile="false" />
+    <include
+        file="config/liquibase/changelog/2018-10-23T20:47:28Z_add_notification_table.xml"
+        relativeToChangelogFile="false" />
+    <include
+        file="config/liquibase/changelog/2018-10-26T21:00:00Z_add_genre_user_relationship.xml"
+        relativeToChangelogFile="false" />
+    <include
+        file="config/liquibase/changelog/2018-10-27T13:49:28Z_add_tmdb_ids.xml"
+        relativeToChangelogFile="false" />
+    <include
+        file="config/liquibase/changelog/2018-10-27T15:29:35Z_change_inheritance_type.xml"
+        relativeToChangelogFile="false" />
 
 </databaseChangeLog>
