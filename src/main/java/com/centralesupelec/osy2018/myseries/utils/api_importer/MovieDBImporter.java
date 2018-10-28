@@ -1,14 +1,21 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
+import com.centralesupelec.osy2018.myseries.models.Episode;
+import com.centralesupelec.osy2018.myseries.models.Season;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.EpisodeRepository;
 import com.centralesupelec.osy2018.myseries.repository.SeasonRepository;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
+import com.centralesupelec.osy2018.myseries.utils.NotificationUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MovieDBImporter {
+
+    Logger logger = LoggerFactory.getLogger(NotificationUtils.class);
 
     private SerieImporter serieImporter;
     private SeasonImporter seasonImporter;
@@ -39,26 +46,40 @@ public class MovieDBImporter {
 
     // @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void importDataFromTMDBApi() {
-        // this.serieImporter.importSerie(1);
+        logger.debug("Start Importation");
+        try {
+            this.serieImporter.importSerie(1);
+            Thread.sleep(250);
 
-        Iterable<Serie> series = this.serieRepository.findAll();
-        for (Serie serie : series) {
-            // System.out.println("Import seasons from : " + serie.getName());
-            // this.seasonImporter.importSeason(serie);
-            System.out.println("Import genres from : " + serie.getName());
-            this.genreImporter.importGenre(serie);
+            Iterable<Serie> series = this.serieRepository.findAll();
+            for (Serie serie : series) {
+                logger.debug("Import seasons from : " + serie.getName());
+                this.seasonImporter.importSeason(serie);
+                Thread.sleep(250);
+                logger.debug("Import genres from : " + serie.getName());
+                this.genreImporter.importGenre(serie);
+                Thread.sleep(250);
+            }
+
+            Iterable<Season> seasons = this.seasonRepository.findAll();
+            for (Season season : seasons) {
+                logger.debug("Import episodes from : " + season.getName());
+                this.episodeImporter.importEpisode(season);
+                Thread.sleep(250);
+            }
+
+            // Iterable<Episode> episodes = this.episodeRepository.findAll();
+            // for (Episode episode : episodes) {
+            //     this.actorImporter.importActor(episode);
+            //     Thread.sleep(250);
+            //     this.directorImporter.importDirector(episode);
+            //     Thread.sleep(250);
+            // }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            logger.debug("End Importation");
         }
 
-        // Iterable<Season> seasons = this.seasonRepository.findAll();
-        // for (Season season : seasons) {
-        //     System.out.println("Import episodes from : " + season.getName());
-        //     this.episodeImporter.importEpisode(season);
-        // }
-
-        // Iterable<Episode> episodes = this.episodeRepository.findAll();
-        // for (Episode episode : episodes) {
-        //     this.actorImporter.importActor(episode);
-        //     this.directorImporter.importDirector(episode);
-        // }
     }
 }
