@@ -1,6 +1,5 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,11 +7,11 @@ import javax.validation.Valid;
 
 import com.centralesupelec.osy2018.myseries.models.Genre;
 import com.centralesupelec.osy2018.myseries.models.User;
-import com.centralesupelec.osy2018.myseries.models.Watchlist;
 import com.centralesupelec.osy2018.myseries.models.dto.ManagedUserVM;
 import com.centralesupelec.osy2018.myseries.repository.GenreRepository;
 import com.centralesupelec.osy2018.myseries.repository.UserRepository;
-import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
+import com.centralesupelec.osy2018.myseries.utils.factory.UserFactory;
+import com.centralesupelec.osy2018.myseries.utils.factory.WatchlistFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,30 +30,24 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping(path="/api")
 public class UserController {
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private WatchlistRepository watchlistRepository;
-	@Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserFactory userFactory;
+
+    @Autowired
+	private WatchlistFactory watchlistFactory;
+
+    @Autowired
 	private GenreRepository genreRepository;
 
 	@PostMapping(path="/register")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void addNewUser (@Valid @RequestBody ManagedUserVM managedUserVM) {
-		User newUser = new User();
-		newUser.setLogin(managedUserVM.getLogin());
-		newUser.setLastName(managedUserVM.getLastName());
-		newUser.setFirstName(managedUserVM.getFirstName());
-		newUser.setBirthdate(managedUserVM.getBirthdate());
-		newUser.setPassword(managedUserVM.getPassword());
-		newUser.setEmail(managedUserVM.getEmail());
-		newUser.setDescription(managedUserVM.getDescription());
-		newUser.setDateCreation(ZonedDateTime.now());
+        User newUser = this.userFactory.createAndSaveUser(managedUserVM);
 
-		userRepository.save(newUser);
+        this.watchlistFactory.createAndSaveWatchlist(newUser);
 
-		Watchlist watchlist = new Watchlist();
-		watchlist.setUser(newUser);
-		watchlistRepository.save(watchlist);
 	}
 
 	@GetMapping(path="/users")

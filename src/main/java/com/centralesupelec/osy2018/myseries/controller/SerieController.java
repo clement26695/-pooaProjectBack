@@ -67,8 +67,12 @@ public class SerieController {
    		return serieRepository.findByName(name);
     }
 
-    /*
-     * @params: Map avec comme clé: Id du genre, valeur: score associé au genre
+    /**
+     * POST /serie/preferences : Get Series ordered by preference.
+     *
+     * @param genreScores a map with the Id of a Genre as a key and
+     *        the ponderation score as a value
+     * @return the list of preferences as {@link PreferenceDTO}
      */
     @PostMapping(value = "/preferences", produces = "application/json")
     @ResponseBody

@@ -9,6 +9,8 @@ import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
 import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +39,7 @@ public class WatchlistController {
   }
 
   @GetMapping(value = "/add/userId/{userId}/serieId/{serieId}")
-  public @ResponseBody String addSerieToWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
+  public ResponseEntity<Watchlist> addSerieToWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
     Optional<Watchlist> watchlistResponse = watchlistRepository.findOneByUserId(userId);
     Optional<Serie> serieResponse = serieRepository.findById(serieId);
 
@@ -49,14 +51,14 @@ public class WatchlistController {
 
       watchlistRepository.save(watchlist);
 
-      return "Add";
+        return ResponseEntity.ok().body(watchlist);
     }
 
-    return null;
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
   @GetMapping(value = "/remove/userId/{userId}/serieId/{serieId}")
-  public @ResponseBody String removeSerieFromWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
+  public ResponseEntity<Watchlist> removeSerieFromWatchlist(@PathVariable("serieId") long serieId, @PathVariable("userId") long userId) {
     Optional<Watchlist> watchlistResponse = watchlistRepository.findOneByUserId(userId);
     Optional<Serie> serieResponse = serieRepository.findById(serieId);
 
@@ -68,10 +70,10 @@ public class WatchlistController {
 
       watchlistRepository.save(watchlist);
 
-      return "Delete";
+      return ResponseEntity.ok().body(watchlist);
     }
 
-    return null;
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
 }
