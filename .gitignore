@@ -130,7 +130,8 @@ Temporary Items
 !.vscode/launch.json
 !.vscode/extensions.json
 
-TODO
+TODO.md
+.vscode/
 
 ### Maven ###
 target/
@@ -148,5 +149,5 @@ buildNumber.properties
 node_modules
 
 ### Custom Docker Database ###
-src/main/docker/bdd
+docker/bdd
 # End of https://www.gitignore.io/api/java,macos,eclipse,visualstudiocode
