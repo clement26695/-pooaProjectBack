@@ -64,10 +64,15 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	private Set<Notification> notifications;
+	
+	@OneToMany(mappedBy = "user")
+    Set<UserSerie> userSerie;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_genre", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<Genre> genres;
+	
+	
 
 	public User() {
 	}

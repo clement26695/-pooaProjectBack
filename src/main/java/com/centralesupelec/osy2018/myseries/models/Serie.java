@@ -36,6 +36,9 @@ public class Serie {
     @JsonManagedReference
     @OneToMany(mappedBy = "serie")
     Set<Season> seasons = new HashSet<>();
+    
+    @OneToMany(mappedBy = "serie")
+    Set<UserSerie> userSerie;
 
 	public Serie(){
 
