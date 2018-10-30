@@ -11,7 +11,10 @@ import org.springframework.data.repository.query.Param;
 public interface UserEpisodeRepository extends CrudRepository<UserEpisode, Long> {
 
     @Query(value = "SELECT * FROM user_episode WHERE user_id = :userId AND episode_id = :episodeId", nativeQuery = true)
-    Optional<UserEpisode> findOneByUserIdAndEpisodeId(@Param("userId") long userId,
-            @Param("episodeId") long episodeId);
+    Optional<UserEpisode> findOneByUserIdAndEpisodeId(@Param("userId") long userId, @Param("episodeId") long episodeId);
+
+    @Query(value = "SELECT COUNT(episodeId) FROM user_episode "
+            + "WHERE user_id = ?1 AND seen = True", nativeQuery = true)
+    int countEpisodesSeenByUser(@Param("userId") Long userId);
 
 }
