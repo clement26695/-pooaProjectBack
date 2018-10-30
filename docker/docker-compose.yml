@@ -1,0 +1,21 @@
+# Use root/example as user/password credentials
+version: '2'
+
+services:
+  myseries-front:
+    image: clement26695/myseries_front
+    ports:
+      - 80:5000
+  myseries-back:
+    image: clement26695/myseries_back
+    environment:
+      - MYSERIES_SLEEP=10
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/myseries?useUnicode=true&characterEncoding=utf8&useSSL=false
+    ports:
+      - 8080:8080
+    links:
+      - db
+  db:
+    extends:
+      file: mysql.yml
+      service: db
