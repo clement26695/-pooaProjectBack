@@ -46,5 +46,21 @@ public class UserSerie {
 	public void setRate(int rate) {
 		this.rate = rate;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Serie getSerie() {
+		return serie;
+	}
+
+	public void setSerie(Serie serie) {
+		this.serie = serie;
+	}
 	
 }

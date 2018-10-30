@@ -29,5 +29,7 @@
     <include
         file="config/liquibase/changelog/2018-10-28T18:02:35Z_add-index-tmdbids.xml"
         relativeToChangelogFile="false" />
-
+	<include
+        file="config/liquibase/changelog/2018-10-30T15:02:35Z_add-table-userserie.xml"
+        relativeToChangelogFile="false" />
 </databaseChangeLog>
