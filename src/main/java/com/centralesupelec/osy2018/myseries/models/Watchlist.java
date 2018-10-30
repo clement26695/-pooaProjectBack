@@ -26,7 +26,7 @@ public class Watchlist {
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "serie_watchlist", joinColumns = @JoinColumn(name = "watchlist_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"))
-	private Set<Serie> series;
+    private Set<Serie> series;
 
 	public Long getId() {
 		return id;
@@ -51,6 +51,5 @@ public class Watchlist {
 	public void setSeries(Set<Serie> series) {
 		this.series = series;
 	}
-
 
 }
