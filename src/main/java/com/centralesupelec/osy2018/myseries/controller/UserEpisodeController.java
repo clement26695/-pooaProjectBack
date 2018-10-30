@@ -21,7 +21,6 @@ public class UserEpisodeController {
     private UserEpisodeFactory userEpisodeFactory;
 
     @PostMapping(value = "/episode/rate")
-    // public ResponseEntity<Void> rateEpisode(@RequestBody Long userId, @PathVariable Long episodeId, @RequestBody int rate) {
     public ResponseEntity<Void> rateEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
 
         try {
@@ -31,6 +30,8 @@ public class UserEpisodeController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
