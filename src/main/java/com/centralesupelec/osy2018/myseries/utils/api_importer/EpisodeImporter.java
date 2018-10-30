@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.config.Constants;
 import com.centralesupelec.osy2018.myseries.models.Episode;
@@ -47,50 +48,55 @@ public class EpisodeImporter {
                     JSONObject episodeTMDB = (JSONObject) e;
                     Episode episode = new Episode();
 
-                    episode.setTmdbId(episodeTMDB.getLong("id"));
+                    Long id = episodeTMDB.getLong("id");
+                    Optional<Episode> databaseEpisode= this.episodeRepository.findByTmdbId(id);
 
-                    String key = "name";
-                    if (!episodeTMDB.isNull(key)) {
-                        episode.setName(episodeTMDB.getString(key));
-                    }
+                    if (!databaseEpisode.isPresent()) {
+                        episode.setTmdbId(episodeTMDB.getLong("id"));
 
-                    key = "air_date";
-                    if (!episodeTMDB.isNull(key)) {
-                        LocalDate date = LocalDate.parse(episodeTMDB.getString(key));
-                        LocalTime midnight = LocalTime.of(0, 0);
-                        ZonedDateTime datetime = ZonedDateTime.of(date, midnight, ZoneId.systemDefault());
-
-                        episode.setAirDate(datetime);
-                    }
-
-                    key = "overview";
-                    if (!episodeTMDB.isNull(key)) {
-                        String description = episodeTMDB.getString(key);
-
-                        if (description.length() > 255) {
-                            description = description.substring(0, 255);
+                        String key = "name";
+                        if (!episodeTMDB.isNull(key)) {
+                            episode.setName(episodeTMDB.getString(key));
                         }
 
-                        episode.setDescription(description);
+                        key = "air_date";
+                        if (!episodeTMDB.isNull(key)) {
+                            LocalDate date = LocalDate.parse(episodeTMDB.getString(key));
+                            LocalTime midnight = LocalTime.of(0, 0);
+                            ZonedDateTime datetime = ZonedDateTime.of(date, midnight, ZoneId.systemDefault());
+
+                            episode.setAirDate(datetime);
+                        }
+
+                        key = "overview";
+                        if (!episodeTMDB.isNull(key)) {
+                            String description = episodeTMDB.getString(key);
+
+                            if (description.length() > 255) {
+                                description = description.substring(0, 255);
+                            }
+
+                            episode.setDescription(description);
+                        }
+
+                        key = "still_path";
+                        if (!episodeTMDB.isNull(key)) {
+                            String imageURL = episodeTMDB.getString(key);
+
+                            episode.setImageURL(imageURL);
+                        }
+
+                        key = "episode_number";
+                        if (!episodeTMDB.isNull(key)) {
+                            int episodeNumber = episodeTMDB.getInt(key);
+
+                            episode.setEpisodeNumber(episodeNumber);
+                        }
+
+                        episode.setSeason(season);
+
+                        this.episodeRepository.save(episode);
                     }
-
-                    key = "still_path";
-                    if (!episodeTMDB.isNull(key)) {
-                        String imageURL = episodeTMDB.getString(key);
-
-                        episode.setImageURL(imageURL);
-                    }
-
-                    key = "episode_number";
-                    if (!episodeTMDB.isNull(key)) {
-                        int episodeNumber = episodeTMDB.getInt(key);
-
-                        episode.setEpisodeNumber(episodeNumber);
-                    }
-
-                    episode.setSeason(season);
-
-                    this.episodeRepository.save(episode);
                 });
             }
 

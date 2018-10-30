@@ -31,8 +31,8 @@ public class ActorImporter {
     }
 
     public void importActor(Episode episode) {
-        String url = Constants.baseURL + "/" + episode.getSeason().getSerie().getTmdbId() + "/season/" + episode.getSeason().getSeasonNumber() + "/episode/" + episode.getEpisodeNumber()
-                + "/credits";
+        String url = Constants.baseURL + "/" + episode.getSeason().getSerie().getTmdbId() + "/season/"
+                + episode.getSeason().getSeasonNumber() + "/episode/" + episode.getEpisodeNumber() + "/credits";
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
                     .queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")
@@ -46,29 +46,29 @@ public class ActorImporter {
                 castResults.forEach(c -> {
                     JSONObject castTMDB = (JSONObject) c;
                     Actor actor = new Actor();
-                    actor.setTmdbId(castTMDB.getLong("id"));
 
-                    String key = "name";
-                    if (!castTMDB.isNull(key)) {
-                        String name = castTMDB.getString(key);
-                        System.out.println("Actor : " + name);
-                        int index = name.lastIndexOf(" ");
-                        String firstName = "", lastName = "";
+                    Long id = castTMDB.getLong("id");
+                    Optional<Actor> actorOptional = this.actorRepository.findByTmdbId(id);
 
-                        if (index != -1) {
-                            firstName = name.substring(0, index);
-                            lastName = name.substring(index + 1);
-                        } else {
-                            lastName = name;
-                        }
+                    if (actorOptional.isPresent()) {
+                        actor = actorOptional.get();
+                    } else {
+                        actor.setTmdbId(id);
 
-                        Optional<Actor> actorOptional = this.actorRepository.findOneByFirstNameAndLastName(firstName,
-                                lastName);
+                        String key = "name";
+                        if (!castTMDB.isNull(key)) {
+                            String name = castTMDB.getString(key);
+                            System.out.println("Actor : " + name);
+                            int index = name.lastIndexOf(" ");
+                            String firstName = "", lastName = "";
 
-                        if (actorOptional.isPresent()) {
-                            actor = actorOptional.get();
-                            System.out.println("In actor database");
-                        } else {
+                            if (index != -1) {
+                                firstName = name.substring(0, index);
+                                lastName = name.substring(index + 1);
+                            } else {
+                                lastName = name;
+                            }
+
                             actor.setFirstName(firstName);
                             actor.setLastName(lastName);
 
@@ -86,7 +86,7 @@ public class ActorImporter {
                     ActorEpisode actorEpisode = new ActorEpisode();
                     actorEpisode.setActor(actor);
                     actorEpisode.setEpisode(episode);
-                    key = "character";
+                    String key = "character";
                     if (!castTMDB.isNull(key)) {
                         String characterName = castTMDB.getString(key);
 

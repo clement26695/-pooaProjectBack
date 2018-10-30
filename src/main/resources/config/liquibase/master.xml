@@ -26,5 +26,8 @@
     <include
         file="config/liquibase/changelog/2018-10-27T15:29:35Z_change_inheritance_type.xml"
         relativeToChangelogFile="false" />
+    <include
+        file="config/liquibase/changelog/2018-10-28T18:02:35Z_add-index-tmdbids.xml"
+        relativeToChangelogFile="false" />
 
 </databaseChangeLog>
