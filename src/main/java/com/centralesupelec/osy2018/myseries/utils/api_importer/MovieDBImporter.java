@@ -48,25 +48,28 @@ public class MovieDBImporter {
     public void importDataFromTMDBApi() {
         logger.debug("Start Importation");
         try {
-            this.serieImporter.importSerie(1);
-            Thread.sleep(250);
+            // this.serieImporter.importSerie(1, true);
+            // Thread.sleep(250);
 
             Iterable<Serie> series = this.serieRepository.findAll();
             for (Serie serie : series) {
-                logger.debug("Import seasons from : " + serie.getName());
-                this.seasonImporter.importSeason(serie);
-                Thread.sleep(250);
-                logger.debug("Import genres from : " + serie.getName());
-                this.genreImporter.importGenre(serie);
+                // logger.debug("Import seasons from : " + serie.getName());
+                // this.seasonImporter.importSeason(serie);
+                // Thread.sleep(250);
+                // logger.debug("Import genres from : " + serie.getName());
+                // this.genreImporter.importGenre(serie);
+                // Thread.sleep(250);
+                logger.debug("Import episode run time from : " + serie.getName());
+                this.serieImporter.importEpisodeRunTime(serie);
                 Thread.sleep(250);
             }
 
-            Iterable<Season> seasons = this.seasonRepository.findAll();
-            for (Season season : seasons) {
-                logger.debug("Import episodes from : " + season.getName());
-                this.episodeImporter.importEpisode(season);
-                Thread.sleep(250);
-            }
+            // Iterable<Season> seasons = this.seasonRepository.findAll();
+            // for (Season season : seasons) {
+            //     logger.debug("Import episodes from : " + season.getName());
+            //     this.episodeImporter.importEpisode(season);
+            //     Thread.sleep(250);
+            // }
 
             // Iterable<Episode> episodes = this.episodeRepository.findAll();
             // for (Episode episode : episodes) {

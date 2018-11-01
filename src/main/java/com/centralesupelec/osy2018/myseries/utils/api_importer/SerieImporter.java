@@ -19,14 +19,12 @@ public class SerieImporter {
 
     private SerieRepository serieRepository;
 
-
     public SerieImporter(SerieRepository serieRepository) {
-		super();
-		this.serieRepository = serieRepository;
-	}
+        super();
+        this.serieRepository = serieRepository;
+    }
 
-
-    public void importSerie(int pageLimit) {
+    public void importSerie(int pageLimit, boolean update) {
         int page = 1;
 
         while (page <= pageLimit) {
@@ -43,10 +41,16 @@ public class SerieImporter {
                     JSONObject show = (JSONObject) s;
 
                     Long id = show.getLong("id");
-                    Optional<Serie> databaseSerie= this.serieRepository.findByTmdbId(id);
+                    Optional<Serie> databaseSerie = this.serieRepository.findByTmdbId(id);
 
-                    if (!databaseSerie.isPresent()) {
-                        Serie serie = new Serie();
+                    if (!databaseSerie.isPresent() || update == true) {
+                        Serie serie;
+                        if (databaseSerie.isPresent()) {
+                            serie = databaseSerie.get();
+                        } else {
+                            serie = new Serie();
+                        }
+
                         serie.setTmdbId(id);
 
                         String key = "overview";
@@ -82,4 +86,26 @@ public class SerieImporter {
         }
     }
 
+    public void importEpisodeRunTime(Serie serie) {
+        String url = Constants.baseURL + "/" + serie.getTmdbId();
+        try {
+            HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
+                    .queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")
+                    .asJson();
+            JSONObject jsonObject = jsonResponse.getBody().getObject();
+
+            String key = "episode_run_time";
+            if (!jsonObject.isNull(key)) {
+                JSONArray episodeRunTimes = jsonObject.getJSONArray(key);
+                if (episodeRunTimes.length() != 0) {
+                    serie.setEpisodeRunTime(episodeRunTimes.getInt(0));
+                }
+            }
+
+            this.serieRepository.save(serie);
+
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -35,5 +35,7 @@
     <include
         file="config/liquibase/changelog/2018-10-30T16:00:12Z_add-relation-user-episode.xml"
         relativeToChangelogFile="false" />
-
+    <include
+        file="config/liquibase/changelog/2018-10-31T14:19:12Z_add-episodeRunTime-to-serie.xml"
+        relativeToChangelogFile="false" />
 </databaseChangeLog>
