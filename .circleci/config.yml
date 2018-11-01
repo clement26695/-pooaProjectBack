@@ -59,6 +59,23 @@ jobs:
           root: ~/repo
           paths:
             - target/*.jar
+  docker:
+    <<: *defaults
+    machine:
+      enabled: true
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Build image
+          command: |
+            cd ~/repo
+            docker build . -f ./docker/Dockerfile -t clement26695/myseries_back
+      - run:
+          name: Build image
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push clement26695/myseries_back
 
   deploy:
     <<: *defaults
@@ -77,6 +94,9 @@ workflows:
   build-and-deploy:
     jobs:
       - build
+      - docker:
+          requires:
+            - build
       - deploy:
           requires:
             - build
