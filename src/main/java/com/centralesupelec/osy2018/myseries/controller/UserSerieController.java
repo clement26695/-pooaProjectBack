@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +55,16 @@ public class UserSerieController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-	}
+    }
+
+    @GetMapping(value = "/serie/{serieId}/rate/average")
+    public ResponseEntity<Float> getAverageRate(@PathVariable("serieId") Long serieId) {
+        Float userSerieResponse = this.userSerieRepository.getAverageRateForSerieId(serieId);
+        if (userSerieResponse != null) {
+            return ResponseEntity.ok().body(userSerieResponse);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

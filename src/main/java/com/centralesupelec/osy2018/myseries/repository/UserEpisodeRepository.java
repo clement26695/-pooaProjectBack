@@ -26,4 +26,8 @@ public interface UserEpisodeRepository extends CrudRepository<UserEpisode, Long>
         + "WHERE user_episode.user_id = ?1 AND user_episode.seen = True "
         + "GROUP BY serie.id", nativeQuery = true)
     List<BigInteger> getTimeBySerie(@Param("userId") Long userId);
+
+    @Query(value = "SELECT AVG(rate) FROM user_episode "
+    + "WHERE episode_id = :episodeId", nativeQuery = true)
+    Float getAverageRateForEpisodeId(@Param("episodeId") Long episodeId);
 }
