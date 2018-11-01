@@ -63,7 +63,7 @@ public class SerieImporter {
                             serie.setDescription(description);
                         }
 
-                        key = "original_name";
+                        key = "name";
                         if (!show.isNull(key)) {
                             serie.setName(show.getString(key));
                         }
