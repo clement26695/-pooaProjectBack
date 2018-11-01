@@ -27,7 +27,11 @@ public class Serie {
 	private String name;
 	private String description;
 	private String image;
-	private Long tmdbId;
+    private Long tmdbId;
+
+    // We put it here because of the API we choose that does not provide
+    // the information for the episode entity
+    private Integer episodeRunTime;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "serie_genre", joinColumns = @JoinColumn(name = "serie_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
@@ -41,7 +45,7 @@ public class Serie {
 
 	}
 
-	public Serie(String name, String description) {
+    public Serie(String name, String description) {
 		this.name = name;
 		this.description = description;
 	}
@@ -100,6 +104,14 @@ public class Serie {
 
     public void setSeasons(Set<Season> seasons) {
         this.seasons = seasons;
+    }
+
+    public int getEpisodeRunTime() {
+        return episodeRunTime;
+    }
+
+    public void setEpisodeRunTime(int episodeRunTime) {
+        this.episodeRunTime = episodeRunTime;
     }
 
 }
