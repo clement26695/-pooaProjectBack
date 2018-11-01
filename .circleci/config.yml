@@ -70,7 +70,7 @@ jobs:
           name: Build image
           command: |
             cd ~/repo
-            docker build . -f docker/Dockerfile -t clement26695/myseries_back
+            docker build . -f /home/circle-ci/repo/docker/Dockerfile -t clement26695/myseries_back
       - run:
           name: Build image
           command: |
