@@ -106,7 +106,7 @@ public class Serie {
         this.seasons = seasons;
     }
 
-    public int getEpisodeRunTime() {
+    public Integer getEpisodeRunTime() {
         return episodeRunTime;
     }
 

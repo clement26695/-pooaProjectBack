@@ -2,10 +2,13 @@ package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import com.centralesupelec.osy2018.myseries.config.Constants;
 import com.centralesupelec.osy2018.myseries.models.Actor;
 import com.centralesupelec.osy2018.myseries.models.ActorEpisode;
 import com.centralesupelec.osy2018.myseries.models.Episode;
+import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.ActorEpisodeRepository;
 import com.centralesupelec.osy2018.myseries.repository.ActorRepository;
 import com.mashape.unirest.http.HttpResponse;
@@ -16,10 +19,13 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ActorImporter {
+    Logger logger = LoggerFactory.getLogger(ActorImporter.class);
 
     private ActorRepository actorRepository;
     private ActorEpisodeRepository actorEpisodeRepository;
@@ -104,4 +110,75 @@ public class ActorImporter {
         }
     }
 
+    @Transactional
+    public void importActor(Serie serie) {
+        String url = Constants.baseURL + "/" + serie.getTmdbId() + "/credits";
+        try {
+            HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
+                    .queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();
+            JSONObject jsonObject = jsonResponse.getBody().getObject();
+
+            String keyCast = "cast";
+            if (!jsonObject.isNull(keyCast)) {
+                JSONArray castResults = jsonObject.getJSONArray("cast");
+
+                castResults.forEach(c -> {
+                    JSONObject castTMDB = (JSONObject) c;
+                    Actor actor = new Actor();
+
+                    Long id = castTMDB.getLong("id");
+                    Optional<Actor> actorOptional = this.actorRepository.findByTmdbId(id);
+
+                    if (actorOptional.isPresent()) {
+                        actor = actorOptional.get();
+                    } else {
+                        actor.setTmdbId(id);
+
+                        String key = "name";
+                        if (!castTMDB.isNull(key)) {
+                            String name = castTMDB.getString(key);
+                            System.out.println("Actor : " + name);
+                            int index = name.lastIndexOf(" ");
+                            String firstName = "", lastName = "";
+
+                            if (index != -1) {
+                                firstName = name.substring(0, index);
+                                lastName = name.substring(index + 1);
+                            } else {
+                                lastName = name;
+                            }
+
+                            actor.setFirstName(firstName);
+                            actor.setLastName(lastName);
+
+                            key = "profile_path";
+                            if (!castTMDB.isNull(key)) {
+                                String imagePath = castTMDB.getString(key);
+
+                                actor.setImage(imagePath);
+                            }
+
+                            this.actorRepository.save(actor);
+                        }
+                    }
+
+                    String characterName = "";
+
+                    String key = "character";
+                    if (!castTMDB.isNull(key)) {
+                        characterName = castTMDB.getString(key);
+                    }
+
+                    this.actorEpisodeRepository.associateActorToEpisodes(serie.getId(), actor.getId(), characterName);
+
+                });
+            }
+
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
