@@ -7,14 +7,14 @@ import java.util.Optional;
 import com.centralesupelec.osy2018.myseries.models.Genre;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
 
-public interface SerieRepository extends CrudRepository<Serie, Long> {
+public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     List<Serie> findByName(String name);
 
@@ -35,4 +35,6 @@ public interface SerieRepository extends CrudRepository<Serie, Long> {
     + "WHERE watchlist.user_id = :userId "
     + "GROUP BY serie_genre.genre_id", nativeQuery = true)
     List<Map<Genre, Integer>> countSerieByGenre(@Param("userId") Long userId);
+
+    List<Serie> findByNameContaining(@Param("name") String name);
 }

@@ -14,7 +14,11 @@ import com.centralesupelec.osy2018.myseries.utils.RecommendationUtils;
 import com.centralesupelec.osy2018.myseries.utils.api_importer.MovieDBImporter;
 import com.centralesupelec.osy2018.myseries.utils.factory.PreferenceDTOFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +26,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(path="/api/serie")
 public class SerieController {
 
-	private final MovieDBImporter movieDBImporter;
+    Logger logger = LoggerFactory.getLogger(SerieController.class);
+
+    private final MovieDBImporter movieDBImporter;
 
 	@Autowired
     private SerieRepository serieRepository;
@@ -46,25 +53,31 @@ public class SerieController {
 
 	@GetMapping(path="/refresh")
 	public @ResponseBody String refresh() {
+        logger.info("GET request : Refresh database");
+
 		this.movieDBImporter.importDataFromTMDBApi();
 		return "Saved";
 	}
 
 	@GetMapping(path="/all")
-	public @ResponseBody Iterable<Serie> seriesAll(){
-		return serieRepository.findAll();
+	public @ResponseBody Page<Serie> seriesAll(Pageable pageable){
+        logger.info("GET request : Get all series with {} per page", pageable.getPageSize());
+
+        return this.serieRepository.findAll(pageable);
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Optional<Serie> getSerieById(@PathVariable("id") long id) {
+        logger.info("GET request : Get serie with id {}", id);
    		return serieRepository.findById(id);
 	}
 
-	@RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
+    @GetMapping(value = "/name")
 	@ResponseBody
-	public List<Serie> getSerieByName(@PathVariable("name") String name) {
-   		return serieRepository.findByName(name);
+	public List<Serie> getSerieByName(@RequestParam(value = "name", required = false) String name) {
+        logger.info("GET request : Get all series with name {}", name);
+        return serieRepository.findByNameContaining(name);
     }
 
     /**
@@ -77,6 +90,8 @@ public class SerieController {
     @PostMapping(value = "/preferences", produces = "application/json")
     @ResponseBody
     public List<PreferenceDTO> getPreferences(@RequestBody Map<Long, Double> genreScores) {
+        logger.info("POST request : Get Series ordered by preference");
+
         Map<Genre, Double> map = this.genreUtils.getMapGenreDouble(genreScores);
 
         List<Entry<Serie, Double>> entries = this.recommendationUtils.computeRecommendation(map);
