@@ -27,13 +27,14 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     Optional<Serie> findByTmdbId(long id);
 
-    @Query(value = "SELECT genre.id,genre.name,count(serie.id) FROM serie "
+    @Query(value = "SELECT genre.id,genre.name,count(serie.id) AS count FROM serie "
     + "INNER JOIN serie_genre ON serie.id = serie_genre.serie_id "
     + "INNER JOIN genre ON serie_genre.genre_id = genre.id "
     + "INNER JOIN serie_watchlist ON serie.id = serie_watchlist.serie_id "
     + "INNER JOIN watchlist ON serie_watchlist.watchlist_id = watchlist.id "
     + "WHERE watchlist.user_id = :userId "
-    + "GROUP BY serie_genre.genre_id", nativeQuery = true)
+    + "GROUP BY serie_genre.genre_id "
+    + "ORDER BY count DESC", nativeQuery = true)
     List<Map<Genre, Integer>> countSerieByGenre(@Param("userId") Long userId);
 
     List<Serie> findByNameContaining(@Param("name") String name);

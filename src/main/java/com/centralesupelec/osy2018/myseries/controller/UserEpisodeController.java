@@ -1,9 +1,12 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
+import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.UserEpisode;
 import com.centralesupelec.osy2018.myseries.models.dto.UserEpisodeDTO;
+import com.centralesupelec.osy2018.myseries.models.dto.UserSerieDTO;
 import com.centralesupelec.osy2018.myseries.repository.UserEpisodeRepository;
 import com.centralesupelec.osy2018.myseries.utils.exceptions.EpisodeNotFoundException;
 import com.centralesupelec.osy2018.myseries.utils.exceptions.UserNotFoundException;
@@ -43,7 +46,7 @@ public class UserEpisodeController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
@@ -78,7 +81,15 @@ public class UserEpisodeController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    @PostMapping(value = "/episode/serieId/seen")
+    public ResponseEntity<List<BigInteger>> seenEpisodeBySerieId(@RequestBody UserSerieDTO userSerieDTO) {
+        List<BigInteger> episodeSeen = this.userEpisodeRepository.getEpisodeSeenByUserIdAndSerieId(userSerieDTO.getUserId(), userSerieDTO.getSerieId());
+
+        return ResponseEntity.ok(episodeSeen);
 
     }
 

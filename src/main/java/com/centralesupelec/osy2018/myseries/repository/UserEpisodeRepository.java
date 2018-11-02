@@ -30,4 +30,11 @@ public interface UserEpisodeRepository extends CrudRepository<UserEpisode, Long>
     @Query(value = "SELECT AVG(rate) FROM user_episode "
     + "WHERE episode_id = :episodeId", nativeQuery = true)
     Float getAverageRateForEpisodeId(@Param("episodeId") Long episodeId);
+
+    @Query(value = "SELECT user_episode.id FROM user_episode "
+    + "INNER JOIN episode ON episode.id = user_episode.episode_id "
+    + "INNER JOIN season ON season.id = episode.season_id "
+    + "WHERE season.serie_id = :serieId AND user_episode.user_id = :userId AND user_episode.seen = True "
+    + "ORDER BY user_episode.id", nativeQuery = true)
+	List<BigInteger> getEpisodeSeenByUserIdAndSerieId(Long userId, Long serieId);
 }
