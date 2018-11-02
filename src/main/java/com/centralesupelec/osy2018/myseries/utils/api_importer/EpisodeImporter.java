@@ -30,7 +30,7 @@ public class EpisodeImporter {
 		this.episodeRepository = episodeRepository;
     }
 
-    public void importEpisode(Season season) {
+    public void importEpisode(Season season, boolean update) {
 
 
         String url = Constants.baseURL + "/" + season.getSerie().getTmdbId() + "/season/" + season.getSeasonNumber();
@@ -51,7 +51,11 @@ public class EpisodeImporter {
                     Long id = episodeTMDB.getLong("id");
                     Optional<Episode> databaseEpisode= this.episodeRepository.findByTmdbId(id);
 
-                    if (!databaseEpisode.isPresent()) {
+                    if (!databaseEpisode.isPresent() || update == true) {
+                        if (databaseEpisode.isPresent()) {
+                            episode = databaseEpisode.get();
+                        }
+
                         episode.setTmdbId(episodeTMDB.getLong("id"));
 
                         String key = "name";
@@ -72,8 +76,8 @@ public class EpisodeImporter {
                         if (!episodeTMDB.isNull(key)) {
                             String description = episodeTMDB.getString(key);
 
-                            if (description.length() > 255) {
-                                description = description.substring(0, 255);
+                            if (description.length() > 2000) {
+                                description = description.substring(0, 2000);
                             }
 
                             episode.setDescription(description);

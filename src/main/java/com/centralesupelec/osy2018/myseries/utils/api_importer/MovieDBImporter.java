@@ -1,5 +1,6 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
+import com.centralesupelec.osy2018.myseries.models.Episode;
 import com.centralesupelec.osy2018.myseries.models.Season;
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.EpisodeRepository;
@@ -46,41 +47,41 @@ public class MovieDBImporter {
     public void importDataFromTMDBApi() {
         logger.info("Start Importation");
         try {
-            // this.serieImporter.importSerie(10, false);
-            // Thread.sleep(250);
+            this.serieImporter.importSerie(10, false);
+            Thread.sleep(250);
 
             Iterable<Serie> series = this.serieRepository.findAll();
             for (Serie serie : series) {
-                // logger.info("Import seasons from : " + serie.getName());
-                // this.seasonImporter.importSeason(serie);
-                // Thread.sleep(250);
-                // logger.info("Import genres from : " + serie.getName());
-                // this.genreImporter.importGenre(serie);
-                // Thread.sleep(250);
-                // logger.info("Import episode run time from : " + serie.getName());
-                // this.serieImporter.importEpisodeRunTime(serie);
-                // Thread.sleep(250);
+                logger.info("Import seasons from : " + serie.getName());
+                this.seasonImporter.importSeason(serie);
+                Thread.sleep(250);
+                logger.info("Import genres from : " + serie.getName());
+                this.genreImporter.importGenre(serie);
+                Thread.sleep(250);
+                logger.info("Import episode run time from : " + serie.getName());
+                this.serieImporter.importEpisodeRunTime(serie);
+                Thread.sleep(250);
                 logger.info("Import actor from : " + serie.getName());
                 this.actorImporter.importActor(serie);
                 Thread.sleep(250);
             }
 
-            // Iterable<Season> seasons = this.seasonRepository.findAll();
-            // int count = 0;
-            // for (Season season : seasons) {
-            //     logger.info(count + " - Import episodes from : " + season.getSerie().getName() + " - " + season.getSeasonNumber());
-            //     this.episodeImporter.importEpisode(season);
-            //     count += 1;
-            //     Thread.sleep(250);
-            // }
+            Iterable<Season> seasons = this.seasonRepository.findAll();
+            int count = 0;
+            for (Season season : seasons) {
+                logger.info(count + " - Import episodes from : " + season.getSerie().getName() + " - " + season.getSeasonNumber());
+                this.episodeImporter.importEpisode(season, false);
+                count += 1;
+                Thread.sleep(250);
+            }
 
-            // Iterable<Episode> episodes = this.episodeRepository.findAll();
-            // for (Episode episode : episodes) {
-            //     this.actorImporter.importActor(episode);
-            //     Thread.sleep(250);
-            //     this.directorImporter.importDirector(episode);
-            //     Thread.sleep(250);
-            // }
+            Iterable<Episode> episodes = this.episodeRepository.findAll();
+            for (Episode episode : episodes) {
+                this.actorImporter.importActor(episode);
+                Thread.sleep(250);
+                this.directorImporter.importDirector(episode);
+                Thread.sleep(250);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

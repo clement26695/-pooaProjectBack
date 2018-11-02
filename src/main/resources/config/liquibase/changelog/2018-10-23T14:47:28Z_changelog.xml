@@ -17,7 +17,7 @@
 		<addColumn tableName="season">
 			<column name="image_url" type="varchar(255)" />
 		</addColumn>
-		
+
 		<createTable tableName="genre">
 	      <column name="id" type="BIGINT">
 	        <constraints primaryKey="true"/>
@@ -32,7 +32,7 @@
 	        <constraints nullable="false"/>
 	      </column>
 	    </createTable>
-	    
+
 	    <createIndex indexName="serie_genre_genre" tableName="serie_genre">
 	      <column name="genre_id"/>
 	    </createIndex>
@@ -40,6 +40,11 @@
 	      <column name="serie_id"/>
 	    </createIndex>
 	</changeSet>
-	
-	
+    <changeSet author="clementdessoude" id="change-season-episode-numbers-type">
+        <modifyDataType columnName="episode_number" newDataType="MEDIUMINT" tableName="episode"/>
+        <modifyDataType columnName="season_number" newDataType="MEDIUMINT" tableName="season"/>
+        <modifyDataType columnName="description" newDataType="varchar(2000)" tableName="episode"/>
+    </changeSet>
+
+
 </databaseChangeLog>
