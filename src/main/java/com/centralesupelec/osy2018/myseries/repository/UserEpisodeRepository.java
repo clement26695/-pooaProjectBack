@@ -31,10 +31,22 @@ public interface UserEpisodeRepository extends CrudRepository<UserEpisode, Long>
     + "WHERE episode_id = :episodeId", nativeQuery = true)
     Float getAverageRateForEpisodeId(@Param("episodeId") Long episodeId);
 
-    @Query(value = "SELECT user_episode.id FROM user_episode "
+    @Query(value = "SELECT user_episode.rate, user_episode.seen, episode.id FROM "
+    + "(SELECT episode.id, episode.season_id FROM episode "
+    + "INNER JOIN season ON episode.season_id = season.id "
+    + "WHERE season.serie_id = :serieId) AS episode "
+    + "LEFT OUTER JOIN "
+    + "(SELECT rate,seen, episode_id FROM user_episode "
+    + "WHERE user_id = :userId) AS user_episode "
+    + "ON user_episode.episode_id = episode.id ", nativeQuery = true)
+	List<Object[]> getEpisodeUserAndEpisodeBySerieIdAndUserId(@Param("serieId") Long serieId,
+            @Param("userId") Long userId);
+
+    @Query(value = "SELECT episode_id, AVG(rate) FROM user_episode "
     + "INNER JOIN episode ON episode.id = user_episode.episode_id "
-    + "INNER JOIN season ON season.id = episode.season_id "
-    + "WHERE season.serie_id = :serieId AND user_episode.user_id = :userId AND user_episode.seen = True "
-    + "ORDER BY user_episode.id", nativeQuery = true)
-	List<BigInteger> getEpisodeSeenByUserIdAndSerieId(Long userId, Long serieId);
+    + "INNER JOIN season ON episode.season_id = season.id "
+    + "WHERE season.serie_id = :serieId "
+    + "GROUP BY episode_id", nativeQuery = true)
+    List<Object[]> getAverageRateByEpisodeOfSerieId(@Param("serieId") Long serieId);
+
 }

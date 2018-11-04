@@ -1,13 +1,14 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.centralesupelec.osy2018.myseries.models.UserEpisode;
 import com.centralesupelec.osy2018.myseries.models.dto.UserEpisodeDTO;
 import com.centralesupelec.osy2018.myseries.models.dto.UserSerieDTO;
 import com.centralesupelec.osy2018.myseries.repository.UserEpisodeRepository;
+import com.centralesupelec.osy2018.myseries.utils.EpisodeUtils;
 import com.centralesupelec.osy2018.myseries.utils.exceptions.EpisodeNotFoundException;
 import com.centralesupelec.osy2018.myseries.utils.exceptions.UserNotFoundException;
 import com.centralesupelec.osy2018.myseries.utils.factory.UserEpisodeFactory;
@@ -28,6 +29,9 @@ public class UserEpisodeController {
 
     @Autowired
     private UserEpisodeFactory userEpisodeFactory;
+
+    @Autowired
+    private EpisodeUtils episodeUtils;
 
     @Autowired
     private UserEpisodeRepository userEpisodeRepository;
@@ -85,12 +89,10 @@ public class UserEpisodeController {
 
     }
 
-    @PostMapping(value = "/episode/serieId/seen")
-    public ResponseEntity<List<BigInteger>> seenEpisodeBySerieId(@RequestBody UserSerieDTO userSerieDTO) {
-        List<BigInteger> episodeSeen = this.userEpisodeRepository.getEpisodeSeenByUserIdAndSerieId(userSerieDTO.getUserId(), userSerieDTO.getSerieId());
-
-        return ResponseEntity.ok(episodeSeen);
-
+    @PostMapping(value = "/episode/extrainformations")
+    public ResponseEntity<Map<BigInteger, Map<String, Object>>> test(@RequestBody UserSerieDTO userSerieDTO) {
+        Map<BigInteger, Map<String, Object>> response = this.episodeUtils.getListEpisodeExtra(userSerieDTO);
+        return ResponseEntity.ok(response);
     }
 
 }
