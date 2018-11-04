@@ -11,9 +11,9 @@ public class UserEpisodeDTO {
 
     @Min(0)
     @Max(5)
-    private int rate;
+    private Integer rate;
 
-    private boolean seen;
+    private Boolean seen;
 
 	public UserEpisodeDTO() {
 		super();

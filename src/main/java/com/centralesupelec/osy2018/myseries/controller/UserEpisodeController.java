@@ -89,6 +89,21 @@ public class UserEpisodeController {
 
     }
 
+    @PostMapping(value = "/episode/update")
+    public ResponseEntity<Void> updateEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
+        try {
+            this.userEpisodeFactory.updateOrCreateAndSaveUserEpisode(userEpisodeDTO.getUserId(),
+                    userEpisodeDTO.getEpisodeId(), userEpisodeDTO.getRate(), userEpisodeDTO.isSeen());
+        } catch (EpisodeNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
     @PostMapping(value = "/episode/extrainformations")
     public ResponseEntity<Map<BigInteger, Map<String, Object>>> test(@RequestBody UserSerieDTO userSerieDTO) {
         Map<BigInteger, Map<String, Object>> response = this.episodeUtils.getListEpisodeExtra(userSerieDTO);

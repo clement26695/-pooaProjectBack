@@ -58,7 +58,7 @@ public class UserEpisodeFactory {
         }
     }
 
-    public UserEpisode updateOrCreateUserEpisode(long userId, long episodeId, int rate)
+    public UserEpisode updateOrCreateUserEpisode(long userId, long episodeId, Integer rate)
             throws EpisodeNotFoundException, UserNotFoundException{
         UserEpisode newUserEpisode = this.createIfNotExistUserEpisode(userId, episodeId);
 
@@ -67,7 +67,7 @@ public class UserEpisodeFactory {
         return newUserEpisode;
     }
 
-    public UserEpisode updateOrCreateAndSaveUserEpisode(long userId, long episodeId, int rate)
+    public UserEpisode updateOrCreateAndSaveUserEpisode(long userId, long episodeId, Integer rate)
             throws EpisodeNotFoundException, UserNotFoundException {
         UserEpisode newUserEpisode = this.updateOrCreateUserEpisode(userId, episodeId, rate);
 
@@ -76,7 +76,7 @@ public class UserEpisodeFactory {
         return newUserEpisode;
     }
 
-    public UserEpisode updateOrCreateUserEpisode(long userId, long episodeId, boolean seen)
+    public UserEpisode updateOrCreateUserEpisode(long userId, long episodeId, Boolean seen)
             throws EpisodeNotFoundException, UserNotFoundException {
         UserEpisode newUserEpisode = this.createIfNotExistUserEpisode(userId, episodeId);
 
@@ -85,9 +85,27 @@ public class UserEpisodeFactory {
         return newUserEpisode;
     }
 
-    public UserEpisode updateOrCreateAndSaveUserEpisode(long userId, long episodeId, boolean seen)
+    public UserEpisode updateOrCreateAndSaveUserEpisode(long userId, long episodeId, Boolean seen)
             throws EpisodeNotFoundException, UserNotFoundException {
         UserEpisode newUserEpisode = this.updateOrCreateUserEpisode(userId, episodeId, seen);
+
+        this.userEpisodeRepository.save(newUserEpisode);
+
+        return newUserEpisode;
+    }
+
+    public UserEpisode updateOrCreateUserEpisode(long userId, long episodeId, Integer rate, Boolean seen)
+            throws EpisodeNotFoundException, UserNotFoundException {
+        UserEpisode newUserEpisode = this.createIfNotExistUserEpisode(userId, episodeId);
+
+        newUserEpisode.setSeen(seen);
+        newUserEpisode.setRate(rate);
+
+        return newUserEpisode;
+    }
+
+	public UserEpisode updateOrCreateAndSaveUserEpisode(Long userId, Long episodeId, Integer rate, Boolean seen) {
+        UserEpisode newUserEpisode = this.updateOrCreateUserEpisode(userId, episodeId, rate, seen);
 
         this.userEpisodeRepository.save(newUserEpisode);
 
