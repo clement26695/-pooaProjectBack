@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,22 +51,43 @@ public class SerieController {
 		this.movieDBImporter = movieDBImporter;
 	}
 
-
-	@GetMapping(path="/refresh")
-	public @ResponseBody String refresh() {
+    /**
+     * GET /serie/refresh : import all database.
+     *
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @GetMapping(path="/refresh")
+	public ResponseEntity<String> refresh() {
         logger.info("GET request : Refresh database");
 
 		this.movieDBImporter.importDataFromTMDBApi();
-		return "Saved";
+
+        return ResponseEntity.ok("Saved");
 	}
 
+    /**
+     * GET /serie/all : get all series.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and with body the page with
+     *         series in content
+     */
 	@GetMapping(path="/all")
-	public @ResponseBody Page<Serie> seriesAll(Pageable pageable){
-        logger.info("GET request : Get all series with {} per page", pageable.getPageSize());
+	public ResponseEntity<Page<Serie>> seriesAll(Pageable pageable) {
+        logger.info("GET request : Get all series with {} results per page", pageable.getPageSize());
 
-        return this.serieRepository.findAll(pageable);
+        final Page<Serie> page = this.serieRepository.findAll(pageable);
+
+        return ResponseEntity.ok().body(page);
 	}
 
+    /**
+     * GET /serie/id/:id : get the "id" serie.
+     *
+     * @param id the id of the serie to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the serie, or
+     *         with status 404 (Not Found)
+     */
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Optional<Serie> getSerieById(@PathVariable("id") long id) {
@@ -73,6 +95,12 @@ public class SerieController {
    		return serieRepository.findById(id);
 	}
 
+    /**
+     * GET /serie/name?name=:name : get the serie with name containing "name".
+     *
+     * @param name the name of the serie to retrieve
+     * @return the list of series with name containg "name"
+     */
     @GetMapping(value = "/name")
 	@ResponseBody
 	public List<Serie> getSerieByName(@RequestParam(value = "name", required = false) String name) {

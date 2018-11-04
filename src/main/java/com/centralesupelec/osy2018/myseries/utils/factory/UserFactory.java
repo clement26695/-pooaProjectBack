@@ -5,6 +5,8 @@ import java.time.ZonedDateTime;
 import com.centralesupelec.osy2018.myseries.models.User;
 import com.centralesupelec.osy2018.myseries.models.dto.ManagedUserVM;
 import com.centralesupelec.osy2018.myseries.repository.UserRepository;
+import com.centralesupelec.osy2018.myseries.utils.exceptions.EmailAlreadyUsedException;
+import com.centralesupelec.osy2018.myseries.utils.exceptions.LoginAlreadyUsedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,13 @@ public class UserFactory {
 		return newUser;
     }
 
-    public User createAndSaveUser(ManagedUserVM managedUserVM) {
+    public User createAndSaveUser(ManagedUserVM managedUserVM) throws LoginAlreadyUsedException, EmailAlreadyUsedException {
+        if (userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).isPresent()) {
+            throw new LoginAlreadyUsedException();
+        } else if (userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).isPresent()) {
+            throw new EmailAlreadyUsedException();
+        }
+
         User newUser = UserFactory.createUser(managedUserVM);
 
         this.userRepository.save(newUser);

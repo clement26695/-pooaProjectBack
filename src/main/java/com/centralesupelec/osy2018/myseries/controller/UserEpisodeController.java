@@ -13,6 +13,8 @@ import com.centralesupelec.osy2018.myseries.utils.exceptions.EpisodeNotFoundExce
 import com.centralesupelec.osy2018.myseries.utils.exceptions.UserNotFoundException;
 import com.centralesupelec.osy2018.myseries.utils.factory.UserEpisodeFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path="/api")
+@RequestMapping(path = "/api")
 public class UserEpisodeController {
+
+    Logger logger = LoggerFactory.getLogger(UserEpisodeController.class);
 
     @Autowired
     private UserEpisodeFactory userEpisodeFactory;
@@ -36,15 +40,22 @@ public class UserEpisodeController {
     @Autowired
     private UserEpisodeRepository userEpisodeRepository;
 
+    /**
+     * POST /episode/rate : give a rate to a episode.
+     *
+     * @param userEpisodeDTO {@link UserEpisodeDTO} containing a rate between 1 and
+     *                       5, a episodeId, and a userId
+     * @return the ResponseEntity with status 204 (NO_CONTENT) if the episode was
+     *         rated, or with status 404 (Not Found)
+     */
     @PostMapping(value = "/episode/rate")
     public ResponseEntity<Void> rateEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
+        logger.info("POST request to rate episode {}", userEpisodeDTO.getEpisodeId());
 
         try {
             this.userEpisodeFactory.updateOrCreateAndSaveUserEpisode(userEpisodeDTO.getUserId(),
                     userEpisodeDTO.getEpisodeId(), userEpisodeDTO.getRate());
-        } catch (EpisodeNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (UserNotFoundException e) {
+        } catch (EpisodeNotFoundException | UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (NullPointerException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -54,10 +65,22 @@ public class UserEpisodeController {
 
     }
 
+    /**
+     * POST /episode/rate/get : get the rate given by a user to a episode.
+     *
+     * @param userEpisodeDTO {@link UserEpisodeDTO} containing a episodeId and a
+     *                       userId
+     * @return the ResponseEntity with status 200 (OK) with body the rate, or with
+     *         status 404 (Not Found)
+     */
     @PostMapping(value = "/episode/rate/get")
     public ResponseEntity<Integer> getRate(@RequestBody UserEpisodeDTO userEpisodeDTO) {
-        Optional<UserEpisode> userEpisodeResponse = this.userEpisodeRepository.findOneByUserIdAndEpisodeId(userEpisodeDTO.getUserId(),
-                userEpisodeDTO.getEpisodeId());
+        logger.info("POST request to get episode {} rate by user {}", userEpisodeDTO.getEpisodeId(),
+                userEpisodeDTO.getUserId());
+
+        Optional<UserEpisode> userEpisodeResponse = this.userEpisodeRepository
+                .findOneByUserIdAndEpisodeId(userEpisodeDTO.getUserId(), userEpisodeDTO.getEpisodeId());
+
         if (userEpisodeResponse.isPresent()) {
             return ResponseEntity.ok().body(userEpisodeResponse.get().getRate());
         } else {
@@ -65,8 +88,17 @@ public class UserEpisodeController {
         }
     }
 
+    /**
+     * GET /episode/:episodeId/rate/average : get the average rate of a episode.
+     *
+     * @param episodeId the episodeId of the episode
+     * @return the ResponseEntity with status 200 (OK) with body the average rate,
+     *         or with status 404 (Not Found)
+     */
     @GetMapping(value = "/episode/{episodeId}/rate/average")
     public ResponseEntity<Float> getAverageRate(@PathVariable("episodeId") Long episodeId) {
+        logger.info("GET request to get episode {} average rate", episodeId);
+
         Float userEpisodeResponse = this.userEpisodeRepository.getAverageRateForEpisodeId(episodeId);
         if (userEpisodeResponse != null) {
             return ResponseEntity.ok().body(userEpisodeResponse);
@@ -75,10 +107,21 @@ public class UserEpisodeController {
         }
     }
 
+    /**
+     * POST /episode/seen : mark an episode as seen/unseen for a user.
+     *
+     * @param userEpisodeDTO {@link UserEpisodeDTO} containing a boolean seen, an
+     *                       episodeId, and a userId
+     * @return the ResponseEntity with status 204 (NO_CONTENT) if the episode was
+     *         mark as seen/unseen, or with status 404 (Not Found)
+     */
     @PostMapping(value = "/episode/seen")
     public ResponseEntity<Void> seenEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
+        logger.info("POST request to mark episode {} as seen/unseen", userEpisodeDTO.getEpisodeId());
+
         try {
-            this.userEpisodeFactory.updateOrCreateAndSaveUserEpisode(userEpisodeDTO.getUserId(), userEpisodeDTO.getEpisodeId(), userEpisodeDTO.isSeen());
+            this.userEpisodeFactory.updateOrCreateAndSaveUserEpisode(userEpisodeDTO.getUserId(),
+                    userEpisodeDTO.getEpisodeId(), userEpisodeDTO.isSeen());
         } catch (EpisodeNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (UserNotFoundException e) {
@@ -89,8 +132,19 @@ public class UserEpisodeController {
 
     }
 
+    /**
+     * POST /episode/seen : update the rate & seen information between an episode
+     * and a user
+     *
+     * @param userEpisodeDTO {@link UserEpisodeDTO} containing a rate between 1 and
+     *                       5, a boolean seen, an episodeId, and a userId
+     * @return the ResponseEntity with status 204 (NO_CONTENT) if the episode was
+     *         updated, or with status 404 (Not Found)
+     */
     @PostMapping(value = "/episode/update")
     public ResponseEntity<Void> updateEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
+        logger.info("POST request to get update episode {} informations (seen/rate)", userEpisodeDTO.getEpisodeId());
+
         try {
             this.userEpisodeFactory.updateOrCreateAndSaveUserEpisode(userEpisodeDTO.getUserId(),
                     userEpisodeDTO.getEpisodeId(), userEpisodeDTO.getRate(), userEpisodeDTO.isSeen());
@@ -104,8 +158,19 @@ public class UserEpisodeController {
 
     }
 
+    /**
+     * POST /episode/extrainformations : get the (seen/rate/averageRate) information
+     * for all episode in a serie
+     *
+     * @param userSerieDTO {@link UserSerieDTO} containing an serieId, and a userId
+     * @return the ResponseEntity with status 200 (Ok) with body a map with key
+     *         episodeId and value the (seen/rate/averageRate) information
+     */
     @PostMapping(value = "/episode/extrainformations")
     public ResponseEntity<Map<BigInteger, Map<String, Object>>> test(@RequestBody UserSerieDTO userSerieDTO) {
+        logger.info("POST request to get episode from serie {} informations (seen/rate/averageRate)",
+                userSerieDTO.getSerieId());
+
         Map<BigInteger, Map<String, Object>> response = this.episodeUtils.getListEpisodeExtra(userSerieDTO);
         return ResponseEntity.ok(response);
     }
