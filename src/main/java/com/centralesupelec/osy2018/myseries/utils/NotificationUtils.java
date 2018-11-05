@@ -1,30 +1,33 @@
 package com.centralesupelec.osy2018.myseries.utils;
 
-import java.util.List;
-
 import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.models.User;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
 import com.centralesupelec.osy2018.myseries.repository.UserRepository;
 import com.centralesupelec.osy2018.myseries.utils.factory.NotificationFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class NotificationUtils {
 
-    Logger logger = LoggerFactory.getLogger(NotificationUtils.class);
-    @Autowired
+    private Logger logger = LoggerFactory.getLogger(NotificationUtils.class);
+
     private SerieRepository serieRepository;
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired NotificationFactory notificationFactory;
+    private NotificationFactory notificationFactory;
+
+    public NotificationUtils(SerieRepository serieRepository, UserRepository userRepository, NotificationFactory notificationFactory) {
+        this.serieRepository = serieRepository;
+        this.userRepository = userRepository;
+        this.notificationFactory = notificationFactory;
+    }
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void notifyUsersForEpisodeTomorrow() {

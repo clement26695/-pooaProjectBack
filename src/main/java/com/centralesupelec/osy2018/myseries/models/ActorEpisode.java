@@ -11,56 +11,53 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "actor_episode")
 public class ActorEpisode {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
-	private String characterName;
-	
-	@ManyToOne
-	@JoinColumn(name = "actor_id")
-	private Actor actor;
-	
-	@ManyToOne
-	@JoinColumn(name = "episode_id")
-	private Episode episode;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-	
-	public ActorEpisode() {}
+    private String characterName;
 
-	public long getId() {
-		return id;
-	}
+    @ManyToOne
+    @JoinColumn(name = "actor_id")
+    private Actor actor;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @ManyToOne
+    @JoinColumn(name = "episode_id")
+    private Episode episode;
 
-	public String getCharacterName() {
-		return characterName;
-	}
+    public ActorEpisode() {
+    }
 
-	public void setCharacterName(String characterName) {
-		this.characterName = characterName;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public Actor getActor() {
-		return actor;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setActor(Actor actor) {
-		this.actor = actor;
-	}
+    public String getCharacterName() {
+        return characterName;
+    }
 
-	public Episode getEpisode() {
-		return episode;
-	}
+    public void setCharacterName(String characterName) {
+        this.characterName = characterName;
+    }
 
-	public void setEpisode(Episode episode) {
-		this.episode = episode;
-	}
-	
-	
-	
-	
+    public Actor getActor() {
+        return actor;
+    }
+
+    public void setActor(Actor actor) {
+        this.actor = actor;
+    }
+
+    public Episode getEpisode() {
+        return episode;
+    }
+
+    public void setEpisode(Episode episode) {
+        this.episode = episode;
+    }
+
 }

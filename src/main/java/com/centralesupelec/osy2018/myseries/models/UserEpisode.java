@@ -1,12 +1,6 @@
 package com.centralesupelec.osy2018.myseries.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -32,42 +26,39 @@ public class UserEpisode {
 
     private Boolean seen;
 
-    public UserEpisode () {
-
+    public UserEpisode() {
     }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public Episode getEpisode() {
-		return episode;
-	}
+    public Episode getEpisode() {
+        return episode;
+    }
 
-	public void setEpisode(Episode episode) {
-		this.episode = episode;
-	}
+    public void setEpisode(Episode episode) {
+        this.episode = episode;
+    }
 
-	public int getRate() {
-		return rate;
-	}
+    public int getRate() {
+        return rate;
+    }
 
-	public void setRate(int rate) {
-		this.rate = rate;
-	}
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
 
-	public boolean isSeen() {
-		return seen;
-	}
+    public boolean isSeen() {
+        return seen;
+    }
 
-	public void setSeen(boolean seen) {
-		this.seen = seen;
-	}
-
-
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
 
 }

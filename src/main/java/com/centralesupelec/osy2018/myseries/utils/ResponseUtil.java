@@ -20,7 +20,7 @@ public interface ResponseUtil {
      * @return response containing {@code maybeResponse} if present or
      *         {@link HttpStatus#NOT_FOUND}
      */
-    public static <X> ResponseEntity<X> wrapOrNotFound(Optional<X> maybeResponse) {
+    static <X> ResponseEntity<X> wrapOrNotFound(Optional<X> maybeResponse) {
         return maybeResponse.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

@@ -1,106 +1,98 @@
 package com.centralesupelec.osy2018.myseries.models;
 
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Size;
-
 @Entity
-@Table(name = "person", uniqueConstraints = @UniqueConstraint(columnNames = { "first_name", "last_name" }))
+@Table(name = "person", uniqueConstraints = @UniqueConstraint(columnNames = {"first_name", "last_name"}))
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Person {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Size(max = 50)
-	@Column(name = "first_name", length = 50)
-	private String firstName;
+    @Size(max = 50)
+    @Column(name = "first_name", length = 50)
+    private String firstName;
 
-	@Size(max = 50)
-	@Column(name = "last_name", length = 50)
-	private String lastName;
+    @Size(max = 50)
+    @Column(name = "last_name", length = 50)
+    private String lastName;
 
-	private String image;
+    private String image;
 
-	private LocalDate birthdate;
+    private LocalDate birthday;
 
-	private long tmdbId;
+    private long tmdbId;
 
-	public Person() {}
+    public Person() {
+    }
 
-	public Person(String firstName, String lastName, LocalDate birthdate, String image) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.birthdate = birthdate;
-		this.image = image;
-	}
+    public Person(String firstName, String lastName, LocalDate birthday, String image) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.image = image;
+    }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public LocalDate getBirthdate() {
-		return birthdate;
-	}
+    public LocalDate getBirthday() {
+        return birthday;
+    }
 
-	public void setBirthdate(LocalDate birthdate) {
-		this.birthdate = birthdate;
-	}
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
 
-	public String getImage() {
-		return image;
-	}
+    public String getImage() {
+        return image;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-	public long getTmdbId() {
-		return tmdbId;
-	}
+    public long getTmdbId() {
+        return tmdbId;
+    }
 
-	public void setTmdbId(long tmdbId) {
-		this.tmdbId = tmdbId;
-	}
+    public void setTmdbId(long tmdbId) {
+        this.tmdbId = tmdbId;
+    }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "{" +
-            "firstname:" + this.firstName +
-            ",lastname:" + this.lastName +
-            ",birthdate:" + this.birthdate +
-        "}";
+                "firstname:" + this.firstName +
+                ",lastname:" + this.lastName +
+                ",birthdate:" + this.birthday +
+                "}";
     }
 
 }

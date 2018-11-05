@@ -1,99 +1,87 @@
 package com.centralesupelec.osy2018.myseries.models;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "season")
 public class Season {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String name;
 
-	@Column(name = "image_url")
-	private String imageURL;
+    @Column(name = "image_url")
+    private String imageURL;
 
-	@Column(name = "season_number")
-	private int seasonNumber;
+    @Column(name = "season_number")
+    private int seasonNumber;
 
     @JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "serie_id")
+    @ManyToOne
+    @JoinColumn(name = "serie_id")
     private Serie serie;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "season")
-    Set<Episode> episodes = new HashSet<>();
+    private Set<Episode> episodes = new HashSet<>();
 
-	private long tmdbId;
+    private long tmdbId;
 
-	public Season() {
+    public Season() {
+    }
 
-	}
+    public long getId() {
+        return id;
+    }
 
-	public Season(String name) {
-		super();
-		this.name = name;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Serie getSerie() {
-		return serie;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setSerie(Serie serie) {
-		this.serie = serie;
-	}
+    public Serie getSerie() {
+        return serie;
+    }
 
-	public int getSeasonNumber() {
-		return seasonNumber;
-	}
+    public void setSerie(Serie serie) {
+        this.serie = serie;
+    }
 
-	public void setSeasonNumber(int seasonNumber) {
-		this.seasonNumber = seasonNumber;
-	}
+    public int getSeasonNumber() {
+        return seasonNumber;
+    }
 
-	public String getImageURL() {
-		return imageURL;
-	}
+    public void setSeasonNumber(int seasonNumber) {
+        this.seasonNumber = seasonNumber;
+    }
 
-	public void setImageURL(String imageURL) {
-		this.imageURL = imageURL;
-	}
+    public String getImageURL() {
+        return imageURL;
+    }
 
-	public long getTmdbId() {
-		return tmdbId;
-	}
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
-	public void setTmdbId(long tmdbId) {
-		this.tmdbId = tmdbId;
+    public long getTmdbId() {
+        return tmdbId;
+    }
+
+    public void setTmdbId(long tmdbId) {
+        this.tmdbId = tmdbId;
     }
 
     public Set<Episode> getEpisodes() {

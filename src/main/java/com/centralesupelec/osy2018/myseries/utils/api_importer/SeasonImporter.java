@@ -1,7 +1,5 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
-import java.util.Optional;
-
 import com.centralesupelec.osy2018.myseries.config.Constants;
 import com.centralesupelec.osy2018.myseries.models.Season;
 import com.centralesupelec.osy2018.myseries.models.Serie;
@@ -10,11 +8,12 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SeasonImporter {
@@ -22,9 +21,9 @@ public class SeasonImporter {
     private SeasonRepository seasonRepository;
 
     public SeasonImporter(SeasonRepository seasonRepository) {
-		super();
+        super();
         this.seasonRepository = seasonRepository;
-	}
+    }
 
     public void importSeason(Serie serie) {
         String url = Constants.baseURL + "/" + serie.getTmdbId();
@@ -42,7 +41,7 @@ public class SeasonImporter {
                     Season season = new Season();
 
                     Long id = seasonTMDB.getLong("id");
-                    Optional<Season> databaseSeason= this.seasonRepository.findByTmdbId(id);
+                    Optional<Season> databaseSeason = this.seasonRepository.findByTmdbId(id);
 
                     if (!databaseSeason.isPresent()) {
                         season.setTmdbId(id);
@@ -70,9 +69,7 @@ public class SeasonImporter {
                 });
             }
 
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (UnirestException | JSONException e) {
             e.printStackTrace();
         }
     }

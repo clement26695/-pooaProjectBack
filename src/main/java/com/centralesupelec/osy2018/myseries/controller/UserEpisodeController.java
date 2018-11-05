@@ -1,9 +1,5 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
-import java.math.BigInteger;
-import java.util.Map;
-import java.util.Optional;
-
 import com.centralesupelec.osy2018.myseries.models.UserEpisode;
 import com.centralesupelec.osy2018.myseries.models.dto.UserEpisodeDTO;
 import com.centralesupelec.osy2018.myseries.models.dto.UserSerieDTO;
@@ -12,18 +8,16 @@ import com.centralesupelec.osy2018.myseries.utils.EpisodeUtils;
 import com.centralesupelec.osy2018.myseries.utils.exceptions.EpisodeNotFoundException;
 import com.centralesupelec.osy2018.myseries.utils.exceptions.UserNotFoundException;
 import com.centralesupelec.osy2018.myseries.utils.factory.UserEpisodeFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(path = "/api")
@@ -31,14 +25,17 @@ public class UserEpisodeController {
 
     Logger logger = LoggerFactory.getLogger(UserEpisodeController.class);
 
-    @Autowired
     private UserEpisodeFactory userEpisodeFactory;
 
-    @Autowired
     private EpisodeUtils episodeUtils;
 
-    @Autowired
     private UserEpisodeRepository userEpisodeRepository;
+
+    public UserEpisodeController(UserEpisodeFactory userEpisodeFactory, EpisodeUtils episodeUtils, UserEpisodeRepository userEpisodeRepository) {
+        this.userEpisodeFactory = userEpisodeFactory;
+        this.episodeUtils = episodeUtils;
+        this.userEpisodeRepository = userEpisodeRepository;
+    }
 
     /**
      * POST /episode/rate : give a rate to a episode.
@@ -46,7 +43,7 @@ public class UserEpisodeController {
      * @param userEpisodeDTO {@link UserEpisodeDTO} containing a rate between 1 and
      *                       5, a episodeId, and a userId
      * @return the ResponseEntity with status 204 (NO_CONTENT) if the episode was
-     *         rated, or with status 404 (Not Found)
+     * rated, or with status 404 (Not Found)
      */
     @PostMapping(value = "/episode/rate")
     public ResponseEntity<Void> rateEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
@@ -71,7 +68,7 @@ public class UserEpisodeController {
      * @param userEpisodeDTO {@link UserEpisodeDTO} containing a episodeId and a
      *                       userId
      * @return the ResponseEntity with status 200 (OK) with body the rate, or with
-     *         status 404 (Not Found)
+     * status 404 (Not Found)
      */
     @PostMapping(value = "/episode/rate/get")
     public ResponseEntity<Integer> getRate(@RequestBody UserEpisodeDTO userEpisodeDTO) {
@@ -93,7 +90,7 @@ public class UserEpisodeController {
      *
      * @param episodeId the episodeId of the episode
      * @return the ResponseEntity with status 200 (OK) with body the average rate,
-     *         or with status 404 (Not Found)
+     * or with status 404 (Not Found)
      */
     @GetMapping(value = "/episode/{episodeId}/rate/average")
     public ResponseEntity<Float> getAverageRate(@PathVariable("episodeId") Long episodeId) {
@@ -113,7 +110,7 @@ public class UserEpisodeController {
      * @param userEpisodeDTO {@link UserEpisodeDTO} containing a boolean seen, an
      *                       episodeId, and a userId
      * @return the ResponseEntity with status 204 (NO_CONTENT) if the episode was
-     *         mark as seen/unseen, or with status 404 (Not Found)
+     * mark as seen/unseen, or with status 404 (Not Found)
      */
     @PostMapping(value = "/episode/seen")
     public ResponseEntity<Void> seenEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
@@ -122,9 +119,7 @@ public class UserEpisodeController {
         try {
             this.userEpisodeFactory.updateOrCreateAndSaveUserEpisode(userEpisodeDTO.getUserId(),
                     userEpisodeDTO.getEpisodeId(), userEpisodeDTO.isSeen());
-        } catch (EpisodeNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (UserNotFoundException e) {
+        } catch (EpisodeNotFoundException | UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -139,7 +134,7 @@ public class UserEpisodeController {
      * @param userEpisodeDTO {@link UserEpisodeDTO} containing a rate between 1 and
      *                       5, a boolean seen, an episodeId, and a userId
      * @return the ResponseEntity with status 204 (NO_CONTENT) if the episode was
-     *         updated, or with status 404 (Not Found)
+     * updated, or with status 404 (Not Found)
      */
     @PostMapping(value = "/episode/update")
     public ResponseEntity<Void> updateEpisode(@RequestBody UserEpisodeDTO userEpisodeDTO) {
@@ -148,9 +143,7 @@ public class UserEpisodeController {
         try {
             this.userEpisodeFactory.updateOrCreateAndSaveUserEpisode(userEpisodeDTO.getUserId(),
                     userEpisodeDTO.getEpisodeId(), userEpisodeDTO.getRate(), userEpisodeDTO.isSeen());
-        } catch (EpisodeNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (UserNotFoundException e) {
+        } catch (EpisodeNotFoundException | UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -164,11 +157,11 @@ public class UserEpisodeController {
      *
      * @param userSerieDTO {@link UserSerieDTO} containing an serieId, and a userId
      * @return the ResponseEntity with status 200 (Ok) with body a map with key
-     *         episodeId and value the (seen/rate/averageRate) information
+     * episodeId and value the (seen/rate/averageRate) information
      */
     @PostMapping(value = "/episode/extrainformations")
     public ResponseEntity<Map<BigInteger, Map<String, Object>>> test(@RequestBody UserSerieDTO userSerieDTO) {
-        logger.info("POST request to get episode from serie {} informations (seen/rate/averageRate)",
+        logger.info("POST request to get episode from serie {} information (seen/rate/averageRate)",
                 userSerieDTO.getSerieId());
 
         Map<BigInteger, Map<String, Object>> response = this.episodeUtils.getListEpisodeExtra(userSerieDTO);

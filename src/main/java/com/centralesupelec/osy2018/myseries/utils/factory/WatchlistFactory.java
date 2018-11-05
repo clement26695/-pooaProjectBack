@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class WatchlistFactory {
 
-    @Autowired
     WatchlistRepository watchlistRepository;
+
+    public WatchlistFactory(WatchlistRepository watchlistRepository) {
+        this.watchlistRepository = watchlistRepository;
+    }
 
     public static Watchlist createWatchlist(User user) {
         Watchlist newWatchlist = new Watchlist();

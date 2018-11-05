@@ -1,7 +1,5 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
-import java.util.Optional;
-
 import com.centralesupelec.osy2018.myseries.config.Constants;
 import com.centralesupelec.osy2018.myseries.models.Director;
 import com.centralesupelec.osy2018.myseries.models.Episode;
@@ -11,11 +9,12 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class DirectorImporter {
@@ -93,9 +92,7 @@ public class DirectorImporter {
                     }
                 });
             }
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (UnirestException | JSONException e) {
             e.printStackTrace();
         }
     }

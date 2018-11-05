@@ -11,8 +11,8 @@ public class StatisticsDTO {
 
     private int episodeSeenCount;
     private int serieInWatchlistCount;
-    private List<Map<Genre, Integer>> serieByGenreCount;
-    private Optional<BigInteger> totalWatchingTime;
+    private List<Object[]> serieByGenreCount;
+    private BigInteger totalWatchingTime;
 
     /**
      * @return the episodeSeenCount
@@ -24,28 +24,28 @@ public class StatisticsDTO {
     /**
      * @return the totalWatchingTime
      */
-    public Optional<BigInteger> getTotalWatchingTime() {
+    public BigInteger getTotalWatchingTime() {
         return totalWatchingTime;
     }
 
     /**
      * @param totalTime the totalWatchingTime to set
      */
-    public void setTotalWatchingTime(Optional<BigInteger> totalTime) {
+    public void setTotalWatchingTime(BigInteger totalTime) {
         this.totalWatchingTime = totalTime;
     }
 
     /**
      * @return the serieByGenreCount
      */
-    public List<Map<Genre, Integer>> getSerieByGenreCount() {
+    public List<Object[]> getSerieByGenreCount() {
         return serieByGenreCount;
     }
 
     /**
      * @param serieByGenreCount the serieByGenreCount to set
      */
-    public void setSerieByGenreCount(List<Map<Genre, Integer>> serieByGenreCount) {
+    public void setSerieByGenreCount(List<Object[]> serieByGenreCount) {
         this.serieByGenreCount = serieByGenreCount;
     }
 

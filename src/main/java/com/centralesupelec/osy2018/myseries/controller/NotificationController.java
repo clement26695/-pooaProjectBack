@@ -1,15 +1,10 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.centralesupelec.osy2018.myseries.models.Notification;
 import com.centralesupelec.osy2018.myseries.repository.NotificationRepository;
 import com.centralesupelec.osy2018.myseries.utils.ResponseUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +12,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 @RequestMapping(path="/api/notification")
 public class NotificationController {
 
 	Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
-	@Autowired
 	private NotificationRepository notificationRepository;
+
+	public NotificationController(NotificationRepository notificationRepository) {
+	    this.notificationRepository = notificationRepository;
+    }
 
     /**
      * GET /notification/id/:id : get the "id" notification.

@@ -18,14 +18,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserSerieFactory {
 
-    @Autowired
     private SerieRepository serieRepository;
 
-    @Autowired
     private UserSerieRepository userSerieRepository;
 
-    @Autowired
     private UserRepository userRepository;
+
+    public UserSerieFactory(SerieRepository serieRepository, UserSerieRepository userSerieRepository, UserRepository userRepository) {
+        this.serieRepository = serieRepository;
+        this.userSerieRepository = userSerieRepository;
+        this.userRepository = userRepository;
+    }
 
     public UserSerie createUserSerie(long userId, long serieId)
             throws EpisodeNotFoundException, UserNotFoundException {

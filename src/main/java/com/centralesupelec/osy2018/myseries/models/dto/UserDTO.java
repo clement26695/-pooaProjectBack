@@ -1,11 +1,10 @@
 package com.centralesupelec.osy2018.myseries.models.dto;
 
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 public class UserDTO {
 
@@ -27,7 +26,7 @@ public class UserDTO {
 
   private ZonedDateTime createdDate;
 
-  private LocalDate birthdate;
+  private LocalDate birthday;
   private String description;
 
   /**
@@ -90,12 +89,12 @@ public class UserDTO {
     this.createdDate = createdDate;
   }
 
-  public LocalDate getBirthdate() {
-    return birthdate;
+  public LocalDate getBirthday() {
+    return birthday;
   }
 
-  public void setBirthdate(LocalDate birthdate) {
-    this.birthdate = birthdate;
+  public void setBirthday(LocalDate birthday) {
+    this.birthday = birthday;
   }
 
   public String getDescription() {

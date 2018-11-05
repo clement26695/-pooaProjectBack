@@ -1,25 +1,23 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.centralesupelec.osy2018.myseries.models.Genre;
 import com.centralesupelec.osy2018.myseries.models.dto.StatisticsDTO;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
 import com.centralesupelec.osy2018.myseries.repository.UserEpisodeRepository;
 import com.centralesupelec.osy2018.myseries.repository.WatchlistRepository;
 import com.centralesupelec.osy2018.myseries.utils.factory.StatisticsDTOFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(path = "/api/statistics")
@@ -27,22 +25,24 @@ public class StatisticsController {
 
     Logger logger = LoggerFactory.getLogger(StatisticsController.class);
 
-    @Autowired
     private UserEpisodeRepository userEpisodeRepository;
 
-    @Autowired
     private WatchlistRepository watchlistRepository;
 
-    @Autowired
     private SerieRepository serieRepository;
+
+    public StatisticsController(UserEpisodeRepository userEpisodeRepository, WatchlistRepository watchlistRepository, SerieRepository serieRepository) {
+        this.userEpisodeRepository = userEpisodeRepository;
+        this.watchlistRepository = watchlistRepository;
+        this.serieRepository = serieRepository;
+    }
 
     /**
      * GET /statistics/all/:userId : get all statistics for the "userId" user.
      *
      * @param userId the "id" of the user from who we want to retrieve all statistics
-     *
      * @return the ResponseEntity with status 200 (OK) and with body the page with
-     *         statistics in content
+     * statistics in content
      */
     @GetMapping(value = "/all/{userId}")
     public ResponseEntity<StatisticsDTO> getAllStats(@PathVariable("userId") Long userId) {
@@ -51,10 +51,10 @@ public class StatisticsController {
         int episodeSeenCount = this.userEpisodeRepository.countEpisodesSeenByUser(userId);
         int serieInWatchlistCount = this.watchlistRepository.countSeriesInWatchlist(userId);
 
-        List<Map<Genre, Integer>> serieByGenreCount = this.serieRepository.countSerieByGenre(userId);
+        List<Object[]> serieByGenreCount = this.serieRepository.countSerieByGenre(userId);
 
         List<BigInteger> timeBySerie = this.userEpisodeRepository.getTimeBySerie(userId);
-        Optional<BigInteger> totalTime = timeBySerie.stream().reduce((x, y) -> x.add(y));
+        BigInteger totalTime = timeBySerie.stream().reduce((x, y) -> x.add(y)).orElse(BigInteger.ZERO);
 
         StatisticsDTO statisticsDTO = StatisticsDTOFactory.createStatisticsDTO(episodeSeenCount, serieInWatchlistCount,
                 serieByGenreCount, totalTime);
@@ -69,7 +69,7 @@ public class StatisticsController {
      * @param userId the "id" of the user from who we want to retrieve the count of
      *               episode seen
      * @return the ResponseEntity with status 200 (OK) and with body the count of
-     *         episodes seen by the user with id "userId"
+     * episodes seen by the user with id "userId"
      */
     @GetMapping(value = "/episodeSeenCount/{userId}")
     public ResponseEntity<Integer> getEpisodeSeenCount(@PathVariable("userId") Long userId) {
@@ -87,7 +87,7 @@ public class StatisticsController {
      * @param userId the "id" of the user from who we want to retrieve the count of
      *               serie in watchlist
      * @return the ResponseEntity with status 200 (OK) and with body the count of
-     *         serie in watchlist for the user with id "userId"
+     * serie in watchlist for the user with id "userId"
      */
     @GetMapping(value = "/serieWatchlistCount/{userId}")
     public ResponseEntity<Integer> getSerieWatchlistCount(@PathVariable("userId") Long userId) {
@@ -105,13 +105,13 @@ public class StatisticsController {
      * @param userId the "id" of the user from who we want to retrieve the count of
      *               serie followed by a user grouped by genre serie in watchlist
      * @return the ResponseEntity with status 200 (OK) and with body the count of
-     *         serie followed by a user grouped by genre
+     * serie followed by a user grouped by genre
      */
     @GetMapping(value = "/serieByGenreCount/{userId}")
-    public ResponseEntity<List<Map<Genre, Integer>>> getSerieByGenreCount(@PathVariable("userId") Long userId) {
+    public ResponseEntity<List<Object[]>> getSerieByGenreCount(@PathVariable("userId") Long userId) {
         logger.info("GET request : Get statistic serieByGenreCount for user with id {}", userId);
 
-        List<Map<Genre, Integer>> count = this.serieRepository.countSerieByGenre(userId);
+        List<Object[]> count = this.serieRepository.countSerieByGenre(userId);
 
         return ResponseEntity.ok().body(count);
     }
@@ -122,9 +122,8 @@ public class StatisticsController {
      *
      * @param userId the "id" of the user from who we want to retrieve the amount of
      *               time spent watching tv
-     *
      * @return the ResponseEntity with status 200 (OK) and with body the amount of
-     *         time spent watching tv or null if no episode was watched
+     * time spent watching tv or null if no episode was watched
      */
     @GetMapping(value = "/getWatchTime/{userId}")
     public ResponseEntity<Optional<BigInteger>> getWatchTime(@PathVariable("userId") Long userId) {

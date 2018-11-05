@@ -6,7 +6,6 @@ import com.centralesupelec.osy2018.myseries.models.Serie;
 import com.centralesupelec.osy2018.myseries.repository.EpisodeRepository;
 import com.centralesupelec.osy2018.myseries.repository.SeasonRepository;
 import com.centralesupelec.osy2018.myseries.repository.SerieRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,22 +27,21 @@ public class MovieDBImporter {
     private EpisodeRepository episodeRepository;
 
     public MovieDBImporter(SerieImporter serieImporter, SeasonImporter seasonImporter, EpisodeImporter episodeImporter,
-            GenreImporter genreImporter, ActorImporter actorImporter, DirectorImporter directorImporter,
-            SerieRepository serieRepository, SeasonRepository seasonRepository, EpisodeRepository episodeRepository) {
-		super();
-		this.serieImporter = serieImporter;
-		this.seasonImporter = seasonImporter;
-		this.episodeImporter = episodeImporter;
-		this.genreImporter = genreImporter;
-		this.actorImporter = actorImporter;
+                           GenreImporter genreImporter, ActorImporter actorImporter, DirectorImporter directorImporter,
+                           SerieRepository serieRepository, SeasonRepository seasonRepository, EpisodeRepository episodeRepository) {
+        super();
+        this.serieImporter = serieImporter;
+        this.seasonImporter = seasonImporter;
+        this.episodeImporter = episodeImporter;
+        this.genreImporter = genreImporter;
+        this.actorImporter = actorImporter;
         this.directorImporter = directorImporter;
         this.serieRepository = serieRepository;
         this.seasonRepository = seasonRepository;
         this.episodeRepository = episodeRepository;
-	}
+    }
 
 
-    // @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void importDataFromTMDBApi() {
         logger.info("Start Importation");
         try {

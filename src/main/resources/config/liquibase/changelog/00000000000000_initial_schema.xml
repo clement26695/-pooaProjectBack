@@ -1,168 +1,169 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
-  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-  <changeSet author="clementdessoude (generated)" id="1539104091084-1">
-    <createTable tableName="actor">
-      <column name="id" type="BIGINT">
-        <constraints nullable="false"/>
-      </column>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-2">
-    <createTable tableName="actor_episode">
-      <column autoIncrement="true" name="id" type="BIGINT">
-        <constraints primaryKey="true"/>
-      </column>
-      <column name="character_name" type="VARCHAR(255)"/>
-      <column name="actor_id" type="BIGINT"/>
-      <column name="episode_id" type="BIGINT"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-3">
-    <createTable tableName="director">
-      <column name="id" type="BIGINT">
-        <constraints nullable="false"/>
-      </column>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-4">
-    <createTable tableName="episode">
-      <column autoIncrement="true" name="id" type="BIGINT">
-        <constraints primaryKey="true"/>
-      </column>
-      <column name="air_date" type="datetime(6)"/>
-      <column name="description" type="VARCHAR(255)"/>
-      <column name="name" type="VARCHAR(255)"/>
-      <column name="director_id" type="BIGINT"/>
-      <column name="season_id" type="BIGINT"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-5">
-    <createTable tableName="hibernate_sequence">
-      <column name="next_val" type="BIGINT"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-6">
-    <createTable tableName="person">
-      <column autoIncrement="true" name="id" type="BIGINT">
-        <constraints primaryKey="true"/>
-      </column>
-      <column name="birthdate" type="date"/>
-      <column name="first_name" type="VARCHAR(50)"/>
-      <column name="last_name" type="VARCHAR(50)"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-7">
-    <createTable tableName="season">
-      <column autoIncrement="true" name="id" type="BIGINT">
-        <constraints primaryKey="true"/>
-      </column>
-      <column name="name" type="VARCHAR(255)"/>
-      <column name="serie_id" type="BIGINT"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-8">
-    <createTable tableName="serie">
-      <column autoIncrement="true" name="id" type="BIGINT">
-        <constraints primaryKey="true"/>
-      </column>
-      <column name="description" type="VARCHAR(255)"/>
-      <column name="name" type="VARCHAR(255)"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-9">
-    <createTable tableName="serie_watchlist">
-      <column name="serie_id" type="BIGINT">
-        <constraints nullable="false"/>
-      </column>
-      <column name="watchlist_id" type="BIGINT">
-        <constraints nullable="false"/>
-      </column>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-10">
-    <createTable tableName="user">
-      <column name="id" type="BIGINT">
-        <constraints nullable="false"/>
-      </column>
-      <column name="birthdate" type="date"/>
-      <column name="created_date" type="datetime(6)">
-        <constraints nullable="false"/>
-      </column>
-      <column name="description" type="VARCHAR(255)"/>
-      <column name="email" type="VARCHAR(254)"/>
-      <column name="first_name" type="VARCHAR(50)"/>
-      <column name="last_name" type="VARCHAR(50)"/>
-      <column name="login" type="VARCHAR(50)">
-        <constraints nullable="false"/>
-      </column>
-      <column name="password_hash" type="VARCHAR(60)">
-        <constraints nullable="false"/>
-      </column>
-      <column name="watchlist_id" type="BIGINT"/>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-11">
-    <createTable tableName="watchlist">
-      <column autoIncrement="true" name="id" type="BIGINT">
-        <constraints primaryKey="true"/>
-      </column>
-    </createTable>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-12">
-    <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="actor"/>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-13">
-    <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="director"/>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-14">
-    <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="user"/>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-15">
-    <addUniqueConstraint columnNames="login" constraintName="UK_ew1hvam8uwaknuaellwhqchhb" tableName="user"/>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-16">
-    <addUniqueConstraint columnNames="email" constraintName="UK_ob8kqyqqgmefl0aco34akdtpe" tableName="user"/>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-17">
-    <createIndex indexName="FK66oe4vodpucia5mu985ju86fp" tableName="user">
-      <column name="watchlist_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-18">
-    <createIndex indexName="FKc28gwntg18xrvcik2b3jjxanf" tableName="actor_episode">
-      <column name="episode_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-19">
-    <createIndex indexName="FKetffb25bksv2397jfkaqxqqe8" tableName="serie_watchlist">
-      <column name="watchlist_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-20">
-    <createIndex indexName="FKi0t8tg8u8dgx8iykh31yxwdvr" tableName="season">
-      <column name="serie_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-21">
-    <createIndex indexName="FKoa15qoeot2fawe0yn1ram9605" tableName="episode">
-      <column name="director_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-22">
-    <createIndex indexName="FKqaudq3bxuia3vu57p01j2a5oa" tableName="actor_episode">
-      <column name="actor_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-23">
-    <createIndex indexName="FKr5ifuxa82mfaxrhgahps7iu2m" tableName="episode">
-      <column name="season_id"/>
-    </createIndex>
-  </changeSet>
-  <changeSet author="clementdessoude (generated)" id="1539104091084-24">
-    <createIndex indexName="FKrk8g71fvpx3khao3mnrxtv3jc" tableName="serie_watchlist">
-      <column name="serie_id"/>
-    </createIndex>
-  </changeSet>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="clementdessoude (generated)" id="1539104091084-1">
+        <createTable tableName="actor">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-2">
+        <createTable tableName="actor_episode">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="character_name" type="VARCHAR(255)"/>
+            <column name="actor_id" type="BIGINT"/>
+            <column name="episode_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-3">
+        <createTable tableName="director">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-4">
+        <createTable tableName="episode">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="air_date" type="datetime(6)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="director_id" type="BIGINT"/>
+            <column name="season_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-5">
+        <createTable tableName="hibernate_sequence">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-6">
+        <createTable tableName="person">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="birthday" type="date"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-7">
+        <createTable tableName="season">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="serie_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-8">
+        <createTable tableName="serie">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-9">
+        <createTable tableName="serie_watchlist">
+            <column name="serie_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="watchlist_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-10">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birthday" type="date"/>
+            <column name="created_date" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(254)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="watchlist_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-11">
+        <createTable tableName="watchlist">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-12">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="actor"/>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-13">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="director"/>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-14">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="user"/>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-15">
+        <addUniqueConstraint columnNames="login" constraintName="UK_ew1hvam8uwaknuaellwhqchhb" tableName="user"/>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-16">
+        <addUniqueConstraint columnNames="email" constraintName="UK_ob8kqyqqgmefl0aco34akdtpe" tableName="user"/>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-17">
+        <createIndex indexName="FK66oe4vodpucia5mu985ju86fp" tableName="user">
+            <column name="watchlist_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-18">
+        <createIndex indexName="FKc28gwntg18xrvcik2b3jjxanf" tableName="actor_episode">
+            <column name="episode_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-19">
+        <createIndex indexName="FKetffb25bksv2397jfkaqxqqe8" tableName="serie_watchlist">
+            <column name="watchlist_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-20">
+        <createIndex indexName="FKi0t8tg8u8dgx8iykh31yxwdvr" tableName="season">
+            <column name="serie_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-21">
+        <createIndex indexName="FKoa15qoeot2fawe0yn1ram9605" tableName="episode">
+            <column name="director_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-22">
+        <createIndex indexName="FKqaudq3bxuia3vu57p01j2a5oa" tableName="actor_episode">
+            <column name="actor_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-23">
+        <createIndex indexName="FKr5ifuxa82mfaxrhgahps7iu2m" tableName="episode">
+            <column name="season_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="clementdessoude (generated)" id="1539104091084-24">
+        <createIndex indexName="FKrk8g71fvpx3khao3mnrxtv3jc" tableName="serie_watchlist">
+            <column name="serie_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

@@ -1,22 +1,23 @@
 package com.centralesupelec.osy2018.myseries.utils;
 
+import com.centralesupelec.osy2018.myseries.models.dto.UserSerieDTO;
+import com.centralesupelec.osy2018.myseries.repository.UserEpisodeRepository;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.centralesupelec.osy2018.myseries.models.dto.UserSerieDTO;
-import com.centralesupelec.osy2018.myseries.repository.UserEpisodeRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service
 public class EpisodeUtils {
 
-    @Autowired
     private UserEpisodeRepository userEpisodeRepository;
+
+    public EpisodeUtils(UserEpisodeRepository userEpisodeRepository) {
+        this.userEpisodeRepository = userEpisodeRepository;
+    }
 
     public Map<BigInteger, Map<String, Object>> getListEpisodeExtra(UserSerieDTO userSerieDTO) {
         List<Object[]> resultsAverageRateByEpisode = this.userEpisodeRepository
@@ -31,7 +32,6 @@ public class EpisodeUtils {
         });
 
         Map<BigInteger, Map<String, Object>> episodeMap = new HashMap<>();
-
 
         List<Object[]> results = this.userEpisodeRepository
                 .getEpisodeUserAndEpisodeBySerieIdAndUserId(userSerieDTO.getSerieId(), userSerieDTO.getUserId());
@@ -51,8 +51,7 @@ public class EpisodeUtils {
             episodeValues.put("averageRate", mapAverageRateByEpisode.get(episodeId));
 
             episodeMap.put(episodeId, episodeValues);
-        };
-
+        }
 
         return episodeMap;
     }

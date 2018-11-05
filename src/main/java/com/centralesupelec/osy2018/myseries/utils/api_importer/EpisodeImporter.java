@@ -1,11 +1,5 @@
 package com.centralesupelec.osy2018.myseries.utils.api_importer;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Optional;
-
 import com.centralesupelec.osy2018.myseries.config.Constants;
 import com.centralesupelec.osy2018.myseries.models.Episode;
 import com.centralesupelec.osy2018.myseries.models.Season;
@@ -14,11 +8,16 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @Service
 public class EpisodeImporter {
@@ -26,8 +25,8 @@ public class EpisodeImporter {
     private EpisodeRepository episodeRepository;
 
     public EpisodeImporter(EpisodeRepository episodeRepository) {
-		super();
-		this.episodeRepository = episodeRepository;
+        super();
+        this.episodeRepository = episodeRepository;
     }
 
     public void importEpisode(Season season, boolean update) {
@@ -49,7 +48,7 @@ public class EpisodeImporter {
                     Episode episode = new Episode();
 
                     Long id = episodeTMDB.getLong("id");
-                    Optional<Episode> databaseEpisode= this.episodeRepository.findByTmdbId(id);
+                    Optional<Episode> databaseEpisode = this.episodeRepository.findByTmdbId(id);
 
                     if (!databaseEpisode.isPresent() || update == true) {
                         if (databaseEpisode.isPresent()) {
@@ -104,12 +103,8 @@ public class EpisodeImporter {
                 });
             }
 
-        } catch (UnirestException e) {
+        } catch (UnirestException | JSONException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } finally {
-
         }
     }
 

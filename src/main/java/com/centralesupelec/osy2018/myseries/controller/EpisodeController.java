@@ -1,15 +1,10 @@
 package com.centralesupelec.osy2018.myseries.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.centralesupelec.osy2018.myseries.models.Episode;
 import com.centralesupelec.osy2018.myseries.repository.EpisodeRepository;
 import com.centralesupelec.osy2018.myseries.utils.ResponseUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +14,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 @RequestMapping(path="/api/episode")
 public class EpisodeController {
 
     Logger logger = LoggerFactory.getLogger(EpisodeController.class);
 
-	@Autowired
 	private EpisodeRepository episodeRepository;
+
+	public EpisodeController(EpisodeRepository episodeRepository) {
+		this.episodeRepository = episodeRepository;
+	}
 
     /**
      * GET /episode/all : get all episodes.

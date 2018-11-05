@@ -1,16 +1,13 @@
 package com.centralesupelec.osy2018.myseries.utils.factory;
 
+import com.centralesupelec.osy2018.myseries.models.dto.StatisticsDTO;
+
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import com.centralesupelec.osy2018.myseries.models.Genre;
-import com.centralesupelec.osy2018.myseries.models.dto.StatisticsDTO;
 
 public class StatisticsDTOFactory {
 
-    public static StatisticsDTO createStatisticsDTO(int episodeSeenCount, int serieInWatchlistCount){
+    public static StatisticsDTO createStatisticsDTO(int episodeSeenCount, int serieInWatchlistCount) {
         StatisticsDTO newStatisticsDTO = new StatisticsDTO();
 
         newStatisticsDTO.setEpisodeSeenCount(episodeSeenCount);
@@ -19,7 +16,7 @@ public class StatisticsDTOFactory {
         return newStatisticsDTO;
     }
 
-    public static StatisticsDTO createStatisticsDTO(int episodeSeenCount, int serieInWatchlistCount, List<Map<Genre, Integer>> serieByGenreCount) {
+    public static StatisticsDTO createStatisticsDTO(int episodeSeenCount, int serieInWatchlistCount, List<Object[]> serieByGenreCount) {
         StatisticsDTO newStatisticsDTO = new StatisticsDTO();
 
         newStatisticsDTO.setEpisodeSeenCount(episodeSeenCount);
@@ -30,7 +27,7 @@ public class StatisticsDTOFactory {
     }
 
     public static StatisticsDTO createStatisticsDTO(int episodeSeenCount, int serieInWatchlistCount,
-            List<Map<Genre, Integer>> serieByGenreCount, Optional<BigInteger> totalTime) {
+                                                    List<Object[]> serieByGenreCount, BigInteger totalTime) {
         StatisticsDTO newStatisticsDTO = new StatisticsDTO();
 
         newStatisticsDTO.setEpisodeSeenCount(episodeSeenCount);
