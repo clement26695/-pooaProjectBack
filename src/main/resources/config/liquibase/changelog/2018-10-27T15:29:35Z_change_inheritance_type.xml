@@ -6,7 +6,7 @@
         <dropTable cascadeConstraints="true" tableName="person"/>
 
         <addColumn tableName="actor">
-            <column name="birthday" type="date"/>
+            <column name="birthdate" type="date"/>
         </addColumn>
         <addColumn tableName="actor">
             <column name="first_name" type="VARCHAR(50)"/>
@@ -18,7 +18,7 @@
 
 
         <addColumn tableName="director">
-            <column name="birthday" type="date"/>
+            <column name="birthdate" type="date"/>
         </addColumn>
         <addColumn tableName="director">
             <column name="first_name" type="VARCHAR(50)"/>

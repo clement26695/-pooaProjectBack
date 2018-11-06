@@ -49,7 +49,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="birthday" type="date"/>
+            <column name="birthdate" type="date"/>
             <column name="first_name" type="VARCHAR(50)"/>
             <column name="last_name" type="VARCHAR(50)"/>
         </createTable>
@@ -87,7 +87,7 @@
             <column name="id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="birthday" type="date"/>
+            <column name="birthdate" type="date"/>
             <column name="created_date" type="datetime(6)">
                 <constraints nullable="false"/>
             </column>
