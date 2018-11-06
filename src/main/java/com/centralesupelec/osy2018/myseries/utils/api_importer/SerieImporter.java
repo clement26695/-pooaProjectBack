@@ -27,7 +27,7 @@ public class SerieImporter {
         int page = 1;
 
         while (page <= pageLimit) {
-            String url = Constants.baseURL + "/popular";
+            String url = Constants.movieAPIbaseURL + "/popular";
 
             try {
                 HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
@@ -86,7 +86,7 @@ public class SerieImporter {
     }
 
     public void importEpisodeRunTime(Serie serie) {
-        String url = Constants.baseURL + "/" + serie.getTmdbId();
+        String url = Constants.movieAPIbaseURL + "/" + serie.getTmdbId();
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
                     .queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")

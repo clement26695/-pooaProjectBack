@@ -29,7 +29,7 @@ public class DirectorImporter {
     }
 
     public void importDirector(Episode episode) {
-        String url = Constants.baseURL + "/" + episode.getSeason().getSerie().getTmdbId() + "/season/"
+        String url = Constants.movieAPIbaseURL + "/" + episode.getSeason().getSerie().getTmdbId() + "/season/"
                 + episode.getSeason().getSeasonNumber() + "/episode/" + episode.getEpisodeNumber() + "/credits";
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")

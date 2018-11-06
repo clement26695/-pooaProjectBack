@@ -51,7 +51,7 @@ public class StatisticsController {
         int episodeSeenCount = this.userEpisodeRepository.countEpisodesSeenByUser(userId);
         int serieInWatchlistCount = this.watchlistRepository.countSeriesInWatchlist(userId);
 
-        List<Object[]> serieByGenreCount = this.serieRepository.countSerieByGenre(userId);
+        List<Map<Genre, Integer>> serieByGenreCount = this.serieRepository.countSerieByGenre(userId);
 
         List<BigInteger> timeBySerie = this.userEpisodeRepository.getTimeBySerie(userId);
         BigInteger totalTime = timeBySerie.stream().reduce((x, y) -> x.add(y)).orElse(BigInteger.ZERO);
@@ -108,10 +108,10 @@ public class StatisticsController {
      * serie followed by a user grouped by genre
      */
     @GetMapping(value = "/serieByGenreCount/{userId}")
-    public ResponseEntity<List<Object[]>> getSerieByGenreCount(@PathVariable("userId") Long userId) {
+    public ResponseEntity<List<Map<Genre, Integer>>> getSerieByGenreCount(@PathVariable("userId") Long userId) {
         logger.info("GET request : Get statistic serieByGenreCount for user with id {}", userId);
 
-        List<Object[]> count = this.serieRepository.countSerieByGenre(userId);
+        List<Map<Genre, Integer>> count = this.serieRepository.countSerieByGenre(userId);
 
         return ResponseEntity.ok().body(count);
     }

@@ -35,7 +35,7 @@ public class ActorImporter {
     }
 
     public void importActor(Episode episode) {
-        String url = Constants.baseURL + "/" + episode.getSeason().getSerie().getTmdbId() + "/season/"
+        String url = Constants.movieAPIbaseURL + "/" + episode.getSeason().getSerie().getTmdbId() + "/season/"
                 + episode.getSeason().getSeasonNumber() + "/episode/" + episode.getEpisodeNumber() + "/credits";
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
@@ -108,7 +108,7 @@ public class ActorImporter {
 
     @Transactional
     public void importActor(Serie serie) {
-        String url = Constants.baseURL + "/" + serie.getTmdbId() + "/credits";
+        String url = Constants.movieAPIbaseURL + "/" + serie.getTmdbId() + "/credits";
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
                     .queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a").asJson();

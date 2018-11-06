@@ -32,7 +32,7 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
             + "WHERE watchlist.user_id = :userId "
             + "GROUP BY serie_genre.genre_id "
             + "ORDER BY count DESC", nativeQuery = true)
-    List<Object[]> countSerieByGenre(@Param("userId") Long userId);
+    List<Map<Genre, Integer>> countSerieByGenre(@Param("userId") Long userId);
 
     List<Serie> findByNameContaining(@Param("name") String name);
 }

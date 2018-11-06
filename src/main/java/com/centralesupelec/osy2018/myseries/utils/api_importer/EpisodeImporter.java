@@ -32,7 +32,7 @@ public class EpisodeImporter {
     public void importEpisode(Season season, boolean update) {
 
 
-        String url = Constants.baseURL + "/" + season.getSerie().getTmdbId() + "/season/" + season.getSeasonNumber();
+        String url = Constants.movieAPIbaseURL + "/" + season.getSerie().getTmdbId() + "/season/" + season.getSeasonNumber();
         try {
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url).header("accept", "application/json")
                     .queryString("language", "en-US").queryString("api_key", "9c415426d4d9adb84a48883894e3e96a")
