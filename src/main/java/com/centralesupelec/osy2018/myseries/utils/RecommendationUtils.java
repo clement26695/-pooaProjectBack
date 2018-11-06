@@ -40,10 +40,9 @@ public class RecommendationUtils {
         Comparator<Entry<Serie, Double>> comparator = new Comparator<Entry<Serie, Double>>() {
             public int compare(Entry<Serie, Double> a, Entry<Serie, Double> b) {
 
-                return a.getValue() < b.getValue() ? 1 : a.getValue() == b.getValue() ? 0 : -1;
+                return a.getValue() < b.getValue() ? 1 : a.getValue().equals(b.getValue()) ? 0 : -1;
             }
         };
-
 
         List<Entry<Serie, Double>> entries = new ArrayList<>(scoreSerie.entrySet());
         entries.sort(comparator);

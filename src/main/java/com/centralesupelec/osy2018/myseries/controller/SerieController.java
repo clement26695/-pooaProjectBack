@@ -115,6 +115,8 @@ public class SerieController {
 
         List<Entry<Serie, Double>> entries = this.recommendationUtils.computeRecommendation(map);
 
+        entries = entries.subList(0, Math.min(10, entries.size()));
+
         return PreferenceDTOFactory.createListPreferenceDTO(entries);
 
     }

@@ -35,8 +35,6 @@ public class UserFactory {
     public User createAndSaveUser(ManagedUserVM managedUserVM) throws LoginAlreadyUsedException, EmailAlreadyUsedException {
         if (userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).isPresent()) {
             throw new LoginAlreadyUsedException();
-        } else if (userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).isPresent()) {
-            throw new EmailAlreadyUsedException();
         }
 
         User newUser = UserFactory.createUser(managedUserVM);
