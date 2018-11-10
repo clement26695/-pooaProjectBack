@@ -8,7 +8,7 @@ services:
   myseries-back:
     image: clement26695/myseries_back
     environment:
-      - MYSERIES_SLEEP=10
+      - MYSERIES_SLEEP=40
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/myseries?useUnicode=true&characterEncoding=utf8&useSSL=false
     ports:
       - 8080:8080
