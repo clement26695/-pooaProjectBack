@@ -58,6 +58,10 @@ Nous avons utilisé Docker afin de faciliter le déploiement de notre applicatio
 
 Une fois ces opérations effectuées, et après avoir attendu une petite minute l'application est lancée. Vous pouvez alors :
 
+Afin de pouvoir avoir une base de données remplie, nous vous fournissons la base que nous utilisons sous forme de fichier sql. Afin d'importer ces données, effectuez la commande suivante dans le dossier docker :
+
+`mysql --host=127.0.0.1 --port=13306 -u root myseries < export.sql`
+
 - Voir le site en local, en allant à l’adresse: <http://localhost:5000>
 - Faire des requêtes à l’API à <http://localhost:8080> (e.g <http://localhost:8080/api/serie/all>)
 - Accéder à la base de données sur le port 13306 de votre ordinateur (`mysql --host=127.0.0.1 --port=13306 -u root myseries`)
