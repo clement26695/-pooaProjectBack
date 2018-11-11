@@ -56,7 +56,6 @@ Nous avons utilisé Docker afin de faciliter le déploiement de notre applicatio
 - Télécharger l’image Docker du front : `docker pull clement26695/myseries_front`
 - Lancer les trois conteneurs avec docker-compose : `docker-compose up`
 
-Une fois ces opérations effectuées, l'application est lancée. Vous pouvez alors :
 Une fois ces opérations effectuées, et après avoir attendu une petite minute l'application est lancée. Vous pouvez alors :
 
 - Voir le site en local, en allant à l’adresse: <http://localhost:5000>
